@@ -1,0 +1,71 @@
+{
+  "verifications": {
+    "cycles": 20,
+    "matrices_aléatoires": 48,
+    "erreur_jauge_pb": 1.2434497875801753e-14,
+    "erreur_dual_programme_linéaire": 8.881784197001252e-16,
+    "erreur_dual_dilatation_spread": 8.881784197001252e-16
+  },
+  "lignes_dans_fenetres_avec_marges": 154096,
+  "ticks_uniques_avec_marges": 154096,
+  "prix_invalides": 0,
+  "volume_non_nul": 0,
+  "pics_par_jour": [
+    {
+      "instant": "2024-06-11T12:55:26.600+00:00",
+      "cycle": "EUR–USD–JPY–EUR",
+      "gain_pb": 0.005199336264922749,
+      "mean_pb": 0.001733112088307583,
+      "age_ms": 49,
+      "triangle_possible": true
+    },
+    {
+      "instant": "2024-06-13T12:21:12.500+00:00",
+      "cycle": "EUR–USD–JPY–EUR",
+      "gain_pb": 0.5451048524482758,
+      "mean_pb": 0.1817016174827586,
+      "age_ms": 67,
+      "triangle_possible": true
+    },
+    {
+      "instant": "2024-06-14T12:36:35.700+00:00",
+      "cycle": "EUR–GBP–USD–EUR",
+      "gain_pb": 0.30850987424412324,
+      "mean_pb": 0.10283662474804108,
+      "age_ms": 53,
+      "triangle_possible": true
+    },
+    {
+      "instant": "2024-07-08T12:43:13.100+00:00",
+      "cycle": "EUR–JPY–USD–EUR",
+      "gain_pb": 0.03910627937443678,
+      "mean_pb": 0.013035426458145594,
+      "age_ms": 59,
+      "triangle_possible": true
+    },
+    {
+      "instant": "2024-07-09T12:43:35.600+00:00",
+      "cycle": "EUR–USD–JPY–EUR",
+      "gain_pb": 0.03773815997556085,
+      "mean_pb": 0.012579386658520283,
+      "age_ms": 51,
+      "triangle_possible": true
+    },
+    {
+      "instant": "2024-07-11T12:39:44.100+00:00",
+      "cycle": "EUR–JPY–USD–EUR",
+      "gain_pb": 0.27898335184090683,
+      "mean_pb": 0.09299445061363561,
+      "age_ms": 912,
+      "triangle_possible": true
+    },
+    {
+      "instant": "2024-07-12T12:33:30.400+00:00",
+      "cycle": "EUR–JPY–USD–EUR",
+      "gain_pb": 0.2686659102482736,
+      "mean_pb": 0.08955530341609119,
+      "age_ms": 264,
+      "triangle_possible": true
+    }
+  ]
+}

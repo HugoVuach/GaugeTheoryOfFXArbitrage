@@ -1,0 +1,14 @@
+{
+  "repliques": 40,
+  "scenarios": 15,
+  "decisions_par_replique": 1100,
+  "pas_latent_ms": 10,
+  "demi_spread_pb": 0.1,
+  "erreur_max_jauge_temporelle_pb": 2.3092638912203256e-14,
+  "volatilites_pb_racine_s": [
+    0.45,
+    0.55,
+    0.0,
+    0.6
+  ]
+}

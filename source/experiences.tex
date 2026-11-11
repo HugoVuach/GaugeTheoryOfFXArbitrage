@@ -1,0 +1,236 @@
+\clearpage
+\part{Expérience 1}
+\section{Holonomie globale sur un cylindre de conversions}
+\label{sec:experience-un}
+
+\subsection{Question et marché contrôlé}
+
+Peut-on avoir une courbure locale nulle, une période globale non nulle et un gain après coûts ? Pour isoler ce mécanisme, on construit un réseau de huit sommets, douze arêtes non orientées et quatre faces carrées. Les sommets peuvent se lire comme quatre devises présentes sur deux plateformes. Les liens horizontaux autorisent les conversions sur chaque anneau, les liens verticaux les transferts entre plateformes. Les autres conversions sont absentes du modèle.
+
+\begin{center}
+\begin{tikzpicture}[x=1.45cm,y=0.8cm,
+  currency/.style={circle,draw=teal!70,fill=pale,minimum size=8mm,font=\small},
+  conv/.style={-{Stealth[length=2.2mm]},semithick,teal}]
+ \foreach \name/\x/\text in {a/0/EUR,b/1/GBP,c/2/USD,d/3/JPY}{
+   \node[currency] (\name) at (\x,0.9) {\text};
+   \node[currency] (\name2) at (\x,-0.9) {\text};
+   \draw[muted!65] (\name) -- (\name2);
+ }
+ \draw[conv] (a)--(b); \draw[conv] (b)--(c); \draw[conv] (c)--(d);
+ \draw[conv] (a2)--(b2); \draw[conv] (b2)--(c2); \draw[conv] (c2)--(d2);
+ \draw[conv] (d) to[bend right=32] node[above,font=\small] {fermeture du tour} (a);
+ \draw[conv] (d2) to[bend left=32] (a2);
+ \node[font=\small,text=muted] at (-0.95,0.9) {P1};
+ \node[font=\small,text=muted] at (-0.95,-0.9) {P2};
+\end{tikzpicture}
+\end{center}
+
+Les quatre faces sont les rectangles entre les deux anneaux, y compris celui qui ferme le tour. Cette identification donne un cylindre cellulaire. Les faces sont fixées par la construction du réseau. Le graphe de cotations complet à quatre devises de l'étude HistData a une autre topologie.
+
+Dans une orientation suivant chaque tour, la cochaîne \(\eta_0\) vaut \(1/4\) sur les huit liens horizontaux et zéro sur les quatre liens verticaux. On impose
+\[
+ m=D_0h+\alpha\eta_0,\qquad
+ D_1\eta_0=0,\quad D_0^{\mathsf T}\eta_0=0 .
+\]
+Le potentiel \(h\) est tiré une fois à graine fixée et sert de changement d'unités local. Dans la jauge \(h=0\), les liens de transfert ont un milieu égal à un. La période \(\alpha\), exprimée en pb logarithmiques, règle le défaut global. Le calcul donne \(\operatorname{rang}D_0=7\), \(\operatorname{rang}D_1=4\) et
+\(\dim H^1=12-7-4=1\). La composante harmonique est donc entièrement paramétrée par \(\alpha\).
+
+Chaque direction d'une arête paie le même demi-spread \(s\ge0\). Les taux du modèle sont \(r_{ij}=\exp[(m_{ij}-s)/10^4]\), et le taux inverse exécutable est \(\exp[(-m_{ij}-s)/10^4]\). La fourchette est ordonnée. La période du tour \(C\) dans l'orientation choisie vaut \(\alpha\). Le sens favorable paie quatre coûts, d'où
+\begin{equation}
+ \log H(C)=\frac{\alpha}{10^4},\qquad
+ G_{\mathrm{tour}}=|\alpha|-4s
+ \quad\text{en pb logarithmiques}.
+ \label{eq:experience-un-seuil}
+\end{equation}
+Sur un cycle, le gradient \(D_0h\) s'annule. Chaque arête harmonique contribue au plus \(|\alpha|/4\) et chaque arête paie \(s\). Un tour atteint cette moyenne maximale, donc un cycle positif existe exactement lorsque \(|\alpha|>4s\).
+
+\clearpage
+\subsection{Résultats et lecture géométrique}
+
+On énumère les \ExpUnCycles{} cycles dirigés simples du réseau. La grille de \ExpUnGrille{} scénarios combine \(161\) valeurs de \(\alpha\) entre \(-2\) et \(2\) pb et \(121\) valeurs de \(s\) entre \(0\) et \(0{,}6\) pb. Le signe calculé coïncide avec \eqref{eq:experience-un-seuil} sur chaque scénario, avec la tolérance numérique du rapport. On compte \ExpUnPositifs{} scénarios avec un gain strictement positif.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.99\linewidth]{experience_un_phase.pdf}
+\caption{Expérience 1. La zone verte admet un cycle positif. Les lignes en tirets sont les frontières \(|\alpha|=4s\). À droite, le gain du tour favorable est tracé pour trois niveaux de coût.}
+\label{fig:experience-un}
+\end{figure}
+
+\begin{table}[H]
+\centering\small
+\begin{tabular}{@{}rrrrr@{}}
+\toprule
+\(\alpha\) & \(s\) & Coût du tour & Gain du tour favorable & \(\Lambda_\star\)\\
+\midrule
+0 & 0,1 & 0,4 & \(-0,4\) & 0\\
+0,3 & 0,1 & 0,4 & \(-0,1\) & 0,75\\
+1 & 0,1 & 0,4 & 0,6 & 2,50\\
+1 & 0,3 & 1,2 & \(-0,2\) & 0,83\\
+\bottomrule
+\end{tabular}
+\caption{Cas contrôlés. Les quatre premières colonnes sont en pb logarithmiques. La dilatation \(\Lambda_\star=|\alpha|/(4s)\) est sans dimension.}
+\end{table}
+
+La circulation autour de chaque face reste inférieure à \(3\times10^{-14}\) pb en valeur absolue sur la grille. Un changement aléatoire de jauge modifie les périodes d'au plus \ExpUnJauge{} pb. La projection sur \(\eta_0\) retrouve \(\alpha\) à moins de \(4\times10^{-14}\) pb près. Ces écarts sont ceux de l'arithmétique flottante.
+
+Les deux lignes à \(\alpha=1\) montrent que la même holonomie globale peut accompagner des signes de gain opposés selon les coûts. La ligne à \(\alpha=0{,}3\) montre une période non nulle absorbée par le spread. Dans les scénarios profitables, un test qui ne lirait que les quatre flux de faces donnerait toujours zéro. Le calcul des périodes ou la recherche globale des cycles détecte le tour favorable.
+
+L'expérience réalise numériquement la distinction entre platitude et exactitude de la première partie. Le seuil financier est déduit de cette période et du budget de spread. Ce résultat est établi analytiquement avant le calcul. Les données HistData servent ensuite à une autre question, celle de la robustesse temporelle des signaux.
+
+\clearpage
+\part{Expérience 2}
+\section{Certifier directement les circulations sur HistData}
+\label{sec:experience-deux}
+
+\subsection{Des erreurs d'arêtes aux erreurs de chemins}
+
+L'enveloppe de la section \ref{sec:marge} traite les variations de chaque arête séparément. Une même variation peut se compenser avec d'autres le long d'un cycle. On conserve les six paires, les dix fenêtres et les délais \(\Delta\in\{0,100,250,500,1000\}\) ms du protocole initial. Les cinq fenêtres de juin calibrent les seuils. Celles de juillet évaluent les règles figées.
+
+Pour un cycle \(C\) de longueur \(\ell_C\), la notation \(g_C(t)=G_C(t)/\ell_C\) désigne son log-gain nominal moyen par conversion. Le rejeu au délai \(\Delta\), avec le point de départ canonique déjà fixé, donne \(g_C^\Delta(t)\). L'erreur est
+\[
+ e_C(t,\Delta)=g_C^\Delta(t)-g_C(t).
+\]
+Ces quantités sont des rapports de transports relativement à la détention dans la devise de départ, selon la convention de la section \ref{sec:temps}. Dans les unités de cotation du calcul, le portage vaut zéro. Cette convention permet de calculer les erreurs à partir des cotations archivées.
+
+On compare trois méthodes, aux quantiles \(q=90\,\%,95\,\%,99\,\%\), tous déclarés comme niveaux de sensibilité.
+\begin{enumerate}
+ \item \textbf{Arêtes marginales.} La méthode initiale calcule un quantile \(u_e\) sur chaque arête. Son rayon moyen pour le cycle est \(u_C=\sum_{e\in C}u_e/\ell_C\).
+ \item \textbf{Arêtes simultanées.} On calibre un rayon commun \(u_A=\widehat Q_q(\max_{e,1\le k\le4}|a_e(t+k\Delta)-a_e(t)|)\). Il borne chaque moyenne de cycle sous le même événement.
+ \item \textbf{Cycles simultanés.} On calibre directement
+ \begin{equation}
+  u_H(\Delta)=\widehat Q_q\!\left(\max_{C\in\mathcal C}|e_C(t,\Delta)|\right).
+  \label{eq:cycle-envelope}
+ \end{equation}
+\end{enumerate}
+Le maximum de \eqref{eq:cycle-envelope} couvre les vingt cycles avant le choix d'un témoin. Le quantile prend l'observation d'ordre supérieur. Les \(13\,340\) instants frais de juin sont tous admissibles au contrôle large des cotations futures, pour chacun des délais.
+
+\begin{proposition}[Borne directe par circulation]
+Si \(|e_C|\le u_C\) pour tous les cycles, alors \(g_C^\Delta\ge g_C-u_C\). Un cycle choisi en maximisant \(g_C-u_C\) et dont la borne est positive reste positif au rejeu. Si \(\max_C(g_C+u_C)\le0\), tous les cycles du protocole ont un gain non positif. De plus, pour les deux contrôles simultanés ci-dessus, \(u_H\le u_A\) sur la calibration.
+\end{proposition}
+\begin{proof}
+Les deux décisions découlent des bornes sur \(e_C\). Pour le dernier point, une erreur moyenne de cycle est une moyenne d'erreurs d'arêtes à leurs rangs de conversion respectifs. Son module est au plus le maximum des erreurs d'arêtes sur tous les rangs. L'inégalité se conserve pour le maximum sur les cycles et pour le quantile empirique.
+\end{proof}
+
+\clearpage
+\subsection{Résultats au quantile de 99 \%}
+
+Les couvertures sont mesurées sur le même ensemble d'instants dont les quatre graphes futurs sont admissibles au plafond de 30 secondes. Le rejeu d'un témoin exige toujours un âge d'au plus une seconde pour chaque cotation utilisée. La couverture des cycles mesure l'événement conjoint \(|e_C|\le u_C\) pour les vingt cycles. Pour les méthodes d'arêtes, on mesure aussi leur événement conjoint sur les douze directions et quatre rangs.
+
+\begin{table}[H]
+\centering\small
+\input{results/table_experience_deux.tex}
+\caption{Expérience 2, juillet, délai de 100 ms, quantile de calibration de 99 \%. Les rayons sont en pb log par conversion. Les comptages portent sur \(6\,733\) instantanés frais.}
+\label{tab:experience-deux}
+\end{table}
+
+À 100 ms, le rayon direct est de \(0{,}2365\) pb par conversion, contre \(0{,}7009\) pour le contrôle simultané des arêtes. Il est donc environ \(2{,}96\) fois plus petit. Pour la boîte marginale initiale, les rayons moyens des cycles vont de \(0{,}3564\) à \(0{,}5354\) pb. Le gain nominal maximal de juillet est de \(0{,}0930\) pb par conversion. Même l'enveloppe directe absorbe donc toute la meilleure marge nominale.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.99\linewidth]{experience_deux_certificats.pdf}
+\caption{Expérience 2. À gauche, les rayons appris au quantile de 99 \%. La zone grise est l'intervalle des rayons moyens des cycles pour la boîte marginale. La ligne pointillée rouge est la meilleure marge nominale de juillet. À droite, couverture simultanée des erreurs des cycles au test.}
+\label{fig:experience-deux}
+\end{figure}
+
+Pour chaque délai strictement positif testé et les trois quantiles, aucune méthode n'accepte de cycle robuste. Au quantile de 99 \%, les trois méthodes laissent aussi tous les cas indéterminés. La borne par cycle resserre les intervalles sans produire de gain certifié dans ces fenêtres.
+
+À 100 ms, l'événement conjoint sur les arêtes de la boîte marginale couvre \(96{,}87\,\%\) des instantanés, tandis que les bornes qu'elle induit sur les cycles couvrent \(100\,\%\). La compensation des erreurs explique cette différence. Pour le rayon direct par cycle, la couverture est de \(99{,}42\,\%\), contre \(99{,}47\,\%\), \(99{,}60\,\%\) et \(99{,}63\,\%\) aux trois délais suivants. Les probabilités de test sont observées sur juillet, après calibration sur juin.
+
+\clearpage
+\subsection{La possibilité de rejeter dépend de la couverture choisie}
+
+Au délai de 100 ms, le passage de 99 \% à 90 \% réduit le rayon direct de \(0{,}237\) à \(0{,}119\) pb par conversion. Cela permet de rejeter certains graphes nominaux par borne supérieure.
+
+\begin{table}[H]
+\centering\small
+\input{results/table_experience_deux_sensibilite.tex}
+\caption{Sensibilité de la règle par cycles, juillet et délai de 100 ms. Un rejet contredit est un instant où un cycle aux étapes rejouables à une seconde donne ensuite un gain positif.}
+\label{tab:experience-deux-sensibilite}
+\end{table}
+
+Au quantile de 90 \%, les \(894\) rejets représentent \(13{,}28\,\%\) de la cohorte fraîche. Trois d'entre eux sont contredits par un cycle positif rejouable. Chacun de ces trois cas se situe hors de l'enveloppe calibrée. La couverture jointe des cycles est de \(91{,}83\,\%\). Au quantile de 95 \%, on obtient cinq rejets et aucun rejet contredit dans ce test. Au quantile de 99 \%, aucun rejet n'est prononcé. Les acceptations robustes restent nulles dans les trois cas.
+
+Le rayon direct conserve les compensations que les contraintes séparées sur les arêtes peuvent perdre. Il apporte ici un résultat mesurable sur la largeur des intervalles et sur les décisions de rejet à plus faible quantile. L'expérience ne met en évidence aucune acceptation robuste profitable à délai positif.
+
+La preuve du certificat est déterministe sous la borne annoncée. Le quantile de calibration donne une règle empirique. Les observations voisines partagent des ticks et les deux périodes ont des comportements différents. On rapporte donc les fréquences par date dans \filepath{results/exp2_resultats.csv}, ainsi que les couvertures globales et celles des alertes initiales. Ces cinq fenêtres de test décrivent une expérience chronologique sur ce flux.
+
+\begin{callout}{Reproduction de l'expérience sur les prix archivés}
+Le cache \filepath{data/exp2_cycle_panels.npz} conserve les gains nominaux et rejoués, les erreurs maximales d'arêtes et les masques de fraîcheur. Il permet de recalculer les quantiles et les décisions. La commande de reconstruction depuis les douze archives vérifie leurs empreintes avant toute extraction. Le cache stocke des observables de cycles, avec les diagnostics d'erreurs nécessaires aux comparateurs.
+\end{callout}
+
+\clearpage
+\part{Expérience 3}
+\section{Retards, transport temporel et fausses alertes}
+\label{sec:experience-trois}
+
+\subsection{Un modèle de référence sans arbitrage dynamique}
+
+On travaille sous une mesure de probabilité \(Q\), avec l'USD comme numéraire constant et des taux d'intérêt nuls. Pour les trois autres devises, les valeurs en USD sont
+\begin{equation}
+ V_i(t)=\exp\!\left(\frac{\sigma_i}{10^4}W_i(t)
+                     -\frac12\left(\frac{\sigma_i}{10^4}\right)^2t\right),
+ \qquad m_{ij}(t)=10^4\log\frac{V_i(t)}{V_j(t)} .
+ \label{eq:exp3-martingale}
+\end{equation}
+Les \(V_i\) sont des martingales exponentielles positives à volatilités constantes sous \(Q\). Ce modèle fournit donc un marché de référence frictionless sans arbitrage sous les hypothèses usuelles des stratégies admissibles. Ajouter les spreads restreint les possibilités de transaction \cite{delbaen}. À chaque instant, les milieux sont exacts et toute moyenne de cycle synchrone paie le demi-spread de \(0{,}1\) pb par conversion.
+
+Les volatilités de EUR, GBP et JPY sont \(0{,}45\), \(0{,}55\) et \(0{,}60\) pb par racine de seconde. Les bruits s'écrivent \(W_i=0{,}6B_0+0{,}8B_i\), avec des browniens \(B\) indépendants. Ces paramètres définissent un marché simulé pédagogique. Ils sont fixés avant les calculs et ne sont pas ajustés au flux HistData.
+
+On simule \ExpTroisRepliques{} trajectoires indépendantes, de graines \(110603\) à \(110642\), à pas de 10 ms. Sur chacune, \(1\,100\) décisions sont prises de 5 s à 114,9 s à pas de 100 ms. Les trajectoires couvrent aussi les conversions futures. Les données sont générées directement aux instants de grille par les incréments gaussiens exacts de \eqref{eq:exp3-martingale}.
+
+\subsection{Observation asynchrone et exécution}
+
+Les paires sont mises à jour indépendamment. Pour un paramètre d'intensité \(\tau\), la probabilité de mise à jour à un pas de 10 ms est \(1-e^{-10/\tau}\). On teste \(\tau=20,100,500\) ms. Sur la grille, l'attente moyenne effective vaut \(10/(1-e^{-10/\tau})\), soit \(25{,}4\), \(105{,}1\) et \(505{,}0\) ms. Les figures indiquent \(\tau\). Un second paramètre retarde seulement la source EUR/USD de \(0,100,500,1000\) ms. Un scénario supplémentaire suspend les mises à jour d'EUR/GBP entre 40 et 45 s. Deux contrôles utilisent des mises à jour synchrones, avec zéro ou 500 ms de retard sur EUR/USD. On obtient quinze scénarios par trajectoire.
+
+À chaque décision, le détecteur choisit le cycle de meilleure moyenne sur les dernières cotations observées. La vérité synchrone au même instant est connue et chaque cycle y est déficitaire. Les signaux positifs de la matrice décalée sont donc de fausses alertes instantanées relativement à cette vérité.
+
+Pour mesurer ce qui se passe ensuite, on exécute le cycle choisi aux \emph{prix courants du modèle} à \(t+k\Delta\), pour \(\Delta=0,100,500,1000\) ms. Le sens, la rotation et les devises sont fixés à la décision. Les gains futurs sont des résultats de transactions exposées à l'évolution des prix. Les cotations archivées dans la matrice décalée servent à la décision, tandis que les conversions utilisent les prix du marché simulé au moment de l'ordre.
+
+\clearpage
+\subsection{Les retards produisent des alertes même avec des ticks récents}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.99\linewidth]{experience_trois_retards.pdf}
+\caption{Expérience 3. Fréquence moyenne des fausses alertes sur quarante trajectoires. Les barres indiquent la moyenne \(\pm1{,}96\) fois son erreur standard entre trajectoires indépendantes. Le panneau B conditionne aux cotations âgées d'au plus une seconde.}
+\label{fig:experience-trois-retard}
+\end{figure}
+
+Sans retard et avec des mises à jour synchrones, on compte zéro alerte. Retarder uniquement EUR/USD de 500 ms, en gardant les autres paires synchrones, donne une fréquence moyenne de \(34{,}94\,\%\). Avec une échelle d'actualisation de 20 ms et aucun retard ajouté, cette fréquence est de \(3{,}35\,\%\). Avec une échelle d'actualisation de 100 ms et un retard ajouté de 500 ms, elle atteint \(65{,}51\,\%\) sur toutes les décisions et \(65{,}45\,\%\) après le filtre d'âge à une seconde.
+
+La panne d'EUR/GBP augmente la fréquence globale à \(66{,}66\,\%\) dans ce dernier scénario. Une fois le filtre d'âge appliqué, elle est de \(65{,}60\,\%\). Ces valeurs caractérisent le marché simulé aux volatilités et au spread choisis. Elles quantifient le mécanisme de décalage sans estimer sa fréquence sur un marché réel.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.99\linewidth]{experience_trois_trajectoire.pdf}
+\caption{Une trajectoire du scénario avec une échelle d'actualisation de 100 ms et retard EUR/USD de 500 ms. La marge reconstruite oscille et devient positive. La marge synchrone reste à \(-0{,}1\) pb par conversion. Les âges restent souvent sous le filtre d'une seconde.}
+\label{fig:experience-trois-trace}
+\end{figure}
+
+\clearpage
+\subsection{Un gain futur positif peut accompagner une moyenne négative}
+
+On retient le scénario avec une échelle d'actualisation de 100 ms et retard EUR/USD de 500 ms. Les \(28\,595\) alertes initiales passant le filtre de fraîcheur forment une cohorte commune aux quatre délais d'exécution.
+
+\begin{table}[H]
+\centering\small
+\input{results/table_experience_trois.tex}
+\caption{Rejeu des \(28\,595\) alertes simulées fraîches, réparties sur quarante trajectoires. Le gain est en pb log par conversion. La moyenne de la dernière colonne donne un poids égal à chaque trajectoire.}
+\label{tab:experience-trois-rejeu}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.99\linewidth]{experience_trois_rejeu.pdf}
+\caption{Expérience 3, même scénario. La fréquence positive augmente avec le délai, tandis que le gain moyen reste voisin de \(-0{,}1\) pb par conversion. Les intervalles sont calculés entre trajectoires indépendantes.}
+\label{fig:experience-trois-rejeu}
+\end{figure}
+
+À délai nul, aucune de ces alertes ne donne de gain aux vrais taux synchrones. À une seconde par conversion, \(9\,883\) rejeux sont positifs, soit \(34{,}56\,\%\), avec un gain moyen de \(-0{,}1006\) pb par conversion. L'allongement du délai ajoute une exposition aux variations du marché. Un signe positif réalisé sur certaines trajectoires accompagne ici une moyenne négative et le risque de perdre.
+
+\subsection{Vérification de jauge sur les chemins temporels}
+
+On applique une transformation dépendante du temps \(\chi_i(t)=3\sin(t/7+i)+11i\), en coordonnées logarithmiques de calcul. La conversion \(i\to j\) à \(t_k\) reçoit l'incrément \(\chi_j(t_k)-\chi_i(t_k)\). La détention en \(i\) entre deux étapes reçoit \(\chi_i(t_k)-\chi_i(t_{k-1})\). La référence détenue dans la devise initiale reçoit \(\chi_{i_0}(T)-\chi_{i_0}(t)\).
+
+La somme des incréments le long du trajet télescope en ce dernier terme. En soustrayant la détention de référence, le gain est invariant. Le contrôle est effectué sur chaque chemin rejoué dans les quinze scénarios, les quatre délais et les quarante trajectoires. L'écart maximal vaut \ExpTroisErreurJauge{} pb logarithmiques au total. L'expérience met ainsi en œuvre le fibré sur les sommets \((i,t)\) et sa connexion temporelle.
+

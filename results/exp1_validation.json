@@ -1,0 +1,12 @@
+{
+  "sommets": 8,
+  "aretes": 12,
+  "faces": 4,
+  "cycles_orientes_simples": 68,
+  "b1": 1,
+  "points_phase": 19481,
+  "points_avec_gain": 8160,
+  "erreur_periodes_sous_jauge_pb": 1.1368683772161603e-13,
+  "erreur_courbure_pb": 2.842170943040401e-14,
+  "erreur_alpha_pb": 3.68594044175552e-14
+}
