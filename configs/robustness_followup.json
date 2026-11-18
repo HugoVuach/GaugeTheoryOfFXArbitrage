@@ -1,0 +1,16 @@
+{
+  "status": "descriptive follow-up after initial test summary, not a new validated policy selection",
+  "motivation": "the 100 ms age filter shows positive known cash in the initial counterfactual results; inspect its sensitivity without changing the frozen eight-policy risk family",
+  "age_filter_ms": 100,
+  "fee_sensitivity_bp": [
+    0.2,
+    0.5
+  ],
+  "latency_sensitivity_ms": [
+    50,
+    500
+  ],
+  "cash_replay_schema": 2,
+  "unclosed_inventory": "record currency and amount, retain partial USD proceeds, freeze the account",
+  "daily_reset": "each date is a separate funded experiment, not continuous compounding"
+}

@@ -1,0 +1,27 @@
+{
+  "histdata_year": {
+    "dates": 314,
+    "raw_ticks": 663387055,
+    "phase_weekdays": {
+      "training": 65,
+      "calibration": 121,
+      "test": 66
+    }
+  },
+  "dukascopy": {
+    "dates": 65,
+    "raw_ticks": 129359071,
+    "phase_weekdays": {
+      "training": 22,
+      "calibration": 21,
+      "test": 11
+    }
+  },
+  "cash_ledgers": {
+    "daily_policy_blocks": 1690,
+    "attempts_checked": 218321,
+    "methods": 26,
+    "test_days": 11,
+    "status": "all checks passed"
+  }
+}

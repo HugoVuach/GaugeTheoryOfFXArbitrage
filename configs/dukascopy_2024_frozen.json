@@ -1,0 +1,86 @@
+{
+  "source": "Dukascopy public daily raw bi5; top-of-book quotes, not fills",
+  "currencies": [
+    "USD",
+    "EUR",
+    "GBP",
+    "JPY",
+    "CHF",
+    "AUD",
+    "CAD",
+    "NZD"
+  ],
+  "pairs": [
+    "EURUSD",
+    "EURGBP",
+    "EURJPY",
+    "EURCHF",
+    "EURAUD",
+    "EURCAD",
+    "EURNZD",
+    "GBPUSD",
+    "GBPJPY",
+    "GBPCHF",
+    "GBPAUD",
+    "GBPCAD",
+    "GBPNZD",
+    "USDJPY",
+    "USDCHF",
+    "USDCAD",
+    "AUDUSD",
+    "AUDJPY",
+    "AUDCHF",
+    "AUDCAD",
+    "AUDNZD",
+    "CADJPY",
+    "CADCHF",
+    "CHFJPY",
+    "NZDUSD",
+    "NZDJPY",
+    "NZDCHF",
+    "NZDCAD"
+  ],
+  "start": "2024-01-01",
+  "end_exclusive": "2025-01-01",
+  "step_ms": 100,
+  "max_age_ms": 1000,
+  "fee_bp_main": 0.1,
+  "latencies_ms": [
+    50,
+    100,
+    500
+  ],
+  "notional_usd": 100000,
+  "initial_daily_cash_usd": 1000000,
+  "day_end_purge_ms": 10000,
+  "training": [
+    "2024-01-01",
+    "2024-04-01"
+  ],
+  "calibration": [
+    "2024-04-01",
+    "2024-10-01"
+  ],
+  "test": [
+    "2024-10-01",
+    "2025-01-01"
+  ],
+  "alpha": 0.05,
+  "delta": 0.05,
+  "thresholds_simple_bp": [
+    0,
+    0.1,
+    0.25,
+    0.5,
+    1,
+    2,
+    4,
+    8
+  ],
+  "receiver_timestamp": "not supplied; source-time causal reconstruction assumption",
+  "replenishment": "published economic version changes (bid,ask,volumes); not every duplicate timestamp",
+  "order_model": "hypothetical sequential FOK, one cleanup IOC; unclosed inventory freezes the daily account",
+  "risk_target": "at least one strictly negative cash PnL OR unresolved inventory in a traded UTC day",
+  "candidate_rule": "maximum-mean simple USD cycle on each positive 100ms snapshot; fixed before labels",
+  "statistical_status": "exchangeability and iid market days are hypotheses, not verified facts"
+}

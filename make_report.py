@@ -331,6 +331,6 @@ if __name__ == "__main__":
     parser.add_argument("--results", type=Path, default=Path("results"))
     parser.add_argument("--figures", type=Path, default=Path("figures"))
     parser.add_argument("--template", type=Path, default=Path("source/note.tex"))
-    parser.add_argument("--output", type=Path, default=Path("Note_Jauge_Arbitrage_FX_3_Experiences.tex"))
+    parser.add_argument("--output", type=Path, default=Path("source/legacy_standalone.tex"))
     args = parser.parse_args()
     run(args.results, args.figures, args.template, args.output)

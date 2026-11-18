@@ -1,0 +1,275 @@
+\clearpage
+\part{Campagne empirique : huit devises, journées entières et historique long}
+\label{part:empirical-eight}
+\input{results/long_period/values.tex}
+
+\section{Données effectivement acquises et choix de source}
+\label{sec:emp-data}
+
+Ce complément remplace la petite fenêtre historique par une campagne sur EUR, USD, GBP, JPY, CHF, AUD, CAD et NZD, avec les 28 paires directes. Le corpus annuel utilise les archives mensuelles \emph{Generic ASCII Tick} HistData de janvier à décembre 2024. Décembre 2023 est également conservé pour reconstruire correctement la frontière UTC du début d'année. Le corpus de quantité utilise les paquets journaliers bruts Dukascopy effectivement reçus entre janvier et mars 2024. Les deux jeux restent séparés.
+
+\begin{table}[H]\centering\small
+\input{results/long_period/table_sources.tex}
+\caption{Observations traitées dans les périodes d'étude. Les dates peuvent inclure des séances partielles, notamment le dimanche ; les jours de test et de calibration statistique sont les dates du lundi au vendredi. Les archives originales, y compris le contexte antérieur, sont livrées séparément.}
+\end{table}
+
+Dukascopy était le premier choix pour l'exécution, parce que son historique conserve les meilleurs bid/ask et les volumes associés \cite{emp-duka-faq,emp-duka-export}. L'accès public a ensuite répondu HTTP 429 et renvoyé vers sa documentation d'accès massif. La collecte a été arrêtée. L'accès S3 décrit par le fournisseur demande des identifiants AWS et une facturation au demandeur \cite{emp-duka-bulk} ; il n'a pas été activé. Le rapport ne présente donc pas une année complète de quantités Dukascopy qui n'aurait pas été obtenue.
+
+Les archives mensuelles HistData étaient accessibles pour les 28 paires. Elles fournissent la campagne annuelle de prix au format natif tick bid/ask, et non des bougies minute \cite{emp-hist-spec}. Le champ volume de cette source ne donne pas de profondeur disponible \cite{emp-hist-faq}. Une donnée absente n'est ni remplacée par une liquidité infinie, ni estimée à partir du nombre de ticks. Les simulations de quantité ci-dessous utilisent exclusivement Dukascopy.
+
+La couverture annuelle signifie que les fichiers de tous les mois et paires ont été acquis et que les journées sont analysées de 00:00 à 24:00 UTC. Elle ne signifie pas qu'un nouveau prix existe à chaque milliseconde, ni que les archives sont exemptes de trous. Les dates sans ticks, intervalles sans mise à jour et pertes de fraîcheur sont conservés dans l'audit. Aucune interpolation ne remplit les interruptions.
+
+\subsection{Précision, horloges et provenance}
+
+HistData utilise l'EST fixe sans heure d'été : le décodage ajoute cinq heures pour obtenir l'UTC. Les paquets Dukascopy sont décodés en millisecondes depuis le début du jour UTC. Le format journalier a été contrôlé sur l'étendue des offsets et sur la cohérence avec les données mensuelles. Les prix JPY sont décodés avec leur facteur propre ; les volumes Dukascopy sont convertis des millions d'unités de base en unités de base.
+
+Les horodatages natifs sont conservés. La grille d'analyse reste de 100 ms. Elle peut manquer un signal plus court entre deux points ; les ticks bruts sont conservés pour permettre une étude ultérieure au rythme de chaque mise à jour. Un horodatage à la milliseconde est une résolution d'écriture, pas une fréquence garantie de mise à jour. Sur les observations valides, \EmpHistWholeSeconds{}\,\% des temps HistData et \EmpDukaWholeSeconds{}\,\% des temps Dukascopy tombent sur une seconde entière. Les proportions de lignes partageant le temps de la ligne précédente sont respectivement \EmpHistDuplicates{}\,\% et \EmpDukaDuplicates{}\,\%. Aux temps ex aequo, le dernier enregistrement dans l'ordre du fichier est utilisé pour la reconstruction, sans effacer les lignes des archives brutes.
+
+Les fichiers ne contiennent pas les temps de réception de notre propre infrastructure. La causalité des calculs est donc celle d'une \emph{reconstruction au temps source}, sous l'hypothèse que cette information est accessible à cette date. Aucun temps de réception n'est inventé. Cette distinction interdit une conclusion sur la latence effectivement accessible à un opérateur réel.
+
+Les ZIP HistData et les paquets LZMA Dukascopy sont conservés sans modification. Les manifestes donnent les URL, dates, instruments, tailles et SHA-256. Les prix invalides sont exclus des reconstructions, mais restent dans les originaux : l'audit compte \EmpHistInvalid{} lignes invalides dans le corpus annuel et \EmpDukaInvalid{} dans le corpus Dukascopy étudié. Les caches de calcul sont des produits dérivés identifiés comme tels.
+
+\subsection{Les distributeurs ne fournissent pas deux répétitions indépendantes}
+
+La comparaison porte sur \EmpComparedPairDays{} couples paire--journée et \EmpMatchedDates{} dates disponibles dans les deux corpus. Dans \EmpMatchedPairDays{} cas, la séquence des temps et des bid/ask au pas de cotation natif est identique. Les empreintes de ces séquences sont fournies dans le code. Les autres cas sont listés séparément.
+
+Cette concordance contrôle le décodage, les facteurs de prix et l'alignement temporel sur la zone observée. Elle ne prouve ni l'indépendance des sources ni l'identité de leur historique en dehors de cette zone. Les observations communes ne sont pas additionnées comme de nouvelles répétitions statistiques. Les séries ne sont pas fusionnées pour former artificiellement une boucle, et les interruptions de l'une ne sont pas réparées silencieusement avec l'autre.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{emp_collecte.pdf}
+\caption{Collecte annuelle et fraîcheur. Le panneau A compte les lignes brutes annuelles ; le panneau B mesure la part de grille où les 28 paires ont toutes moins d'une seconde. Les deux courbes ne couvrent pas les mêmes périodes et ne mesurent pas deux marchés indépendants.}
+\end{figure}
+
+\section{Protocole de reprise et unité statistique}
+\label{sec:emp-protocol}
+
+La campagne annuelle sépare janvier--mars pour l'apprentissage, avril--septembre pour la calibration et octobre--décembre pour le test. Cela représente respectivement \EmpHistTrain{}, \EmpHistCal{} et \EmpHistTest{} dates observées du lundi au vendredi. Le dernier trimestre n'intervient ni dans les paramètres d'échelle ni dans les quantiles de calibration. Les dix journées du 10 au 14 juin et du 8 au 12 juillet, déjà explorées dans le rapport à quatre devises, sont retirées de la calibration. Elles restent intégralement dans les données brutes et les statistiques descriptives. Cet amendement documenté est fondé sur leur utilisation antérieure, et non sur les performances du nouveau test.
+
+Le sous-protocole Dukascopy, imposé par la couverture reçue, utilise janvier pour l'apprentissage, février pour la calibration et les dates reçues de mars pour le test : \EmpDukaTrain{}, \EmpDukaCal{} et \EmpDukaTest{} dates du lundi au vendredi. Ce découpage a été fixé d'après la disponibilité des fichiers, après un premier essai portant sur le 2 janvier, et avant l'examen des résultats de test. Les jours incomplets entre les 28 paires sont identifiés et ne sont pas présentés comme des journées complètes de ce sous-corpus. Le test auxiliaire de mars appartient au premier trimestre du corpus annuel ; il ne constitue pas une répétition indépendante du test annuel.
+
+Le choix initial d'une année Dukascopy et son remplacement pour l'étude annuelle des prix sont documentés dans les configurations. Il ne s'agit pas d'un protocole prétendument préenregistré auprès d'un tiers. Les paramètres, empreintes et étapes de calcul sont fournis pour que cette chronologie soit vérifiable.
+
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}p{35mm}Y@{}}
+\toprule
+Expérience antérieure & Reprise dans cette campagne\\
+\midrule
+Cylindre et période & Le contrôle topologique synthétique est conservé. Les changements d'unités et la dualité sont aussi vérifiés avec des coefficients historiques.\\
+Fenêtres à quatre devises & Étude annuelle de huit devises, 28 paires directes et grille complète à 100 ms.\\
+Délais synthétiques & Résultats de prix historiques à 50, 100 et 500 ms par conversion.\\
+Supports et capacités & Comparaison des enveloppes de chemin et d'arêtes ; flux finis avec taux et tailles réellement archivés. L'ensemble ellipsoïdal synthétique n'est pas requalifié en loi de marché.\\
+Blocs et sélection & Calibration par journées aux niveaux 90, 95 et 99\,\%, normalisation apprise et évaluation hors période.\\
+Exécution monétaire & Rejeu de quantité Dukascopy, coûts, latence, capital, échecs et positions résiduelles. Les remplissages restent hypothétiques.\\
+\bottomrule
+\end{tabularx}
+\caption{Une donnée de marché remplace les entrées de prix lorsque cela a un sens ; elle ne remplace pas les hypothèses d'un contrôle mathématique pur.}
+\end{table}
+
+La fraîcheur principale est d'une seconde \emph{par paire}. Une paire trop ancienne est retirée du graphe. Le filtre de 100 ms sert de sensibilité. La cohorte où toutes les paires sont fraîches est rapportée séparément : elle représente \EmpFreshAllPercent{}\,\% de la grille annuelle. Les indicateurs de Hodge sur le réseau complet utilisent exclusivement cette cohorte.
+
+Les dix dernières secondes de chaque journée sont purgées des candidats ayant besoin de labels futurs. Cette marge couvre huit conversions de 500 ms et une liquidation supplémentaire. Les labels ne débordent donc pas sur le bloc suivant. Les jours voisins ne sont pas déclarés indépendants par ce simple découpage. Les hypothèses d'échangeabilité ou d'indépendance des propositions de la section \ref{sec:ext-inference} restent des hypothèses de modèle, pas des propriétés établies des journées FX.
+
+\clearpage
+\section{Expérience réelle I : géométrie, cycles et frictions}
+\label{sec:emp-geometry}
+
+\subsection{Connexion observée et détection globale}
+
+Pour les paires disponibles, le transport utilise le bid dans le sens base vers quote et l'inverse de l'ask dans l'autre sens. Le poids logarithmique en pb est \(a_{ij}=10^4\log r_{ij}\). Le changement de repère \(a'_{ij}=a_{ij}+\phi_i-\phi_j\) réduit les différences de niveaux entre devises sans modifier les périodes.
+
+Le graphe complet possède 28 arêtes non orientées et un espace des cycles de dimension \(28-8+1=21\). Cette dimension concerne le graphe ; elle n'est pas le premier nombre de Betti du complexe où tous les triangles seraient remplis. Le défaut de potentiel et les périodes élémentaires sont calculés dans les conventions précédentes, avec les coûts bid--ask conservés séparément.
+
+Le réseau à huit devises contient 16\,064 cycles orientés simples. Karp calcule leur moyenne maximale sans les énumérer à chaque instant. La règle financée en USD utilise ensuite un programme dynamique sur les sous-ensembles, comparé dans les tests à l'énumération exhaustive. Elle choisit un cycle simple de moyenne maximale parmi les 13\,699 cycles contenant USD. Cette restriction de financement est annoncée ; elle ne change pas le caractère global du diagnostic précédent.
+
+Les calculs portent sur \EmpGridPoints{} points de grille, dont \EmpActivePoints{} avec au moins une paire fraîche. La règle financée produit \EmpHistCandidateFrames{} grilles candidates et \EmpHistEpisodes{} épisodes, avec séparation lorsqu'un candidat disparaît ou que le chemin change. Une suite de ticks du même épisode n'est pas comptée comme une répétition statistique indépendante.
+
+\subsection{Effet des coûts et intérêt des cycles plus longs}
+
+Pour des frais proportionnels supplémentaires \(f\) en pb par conversion, le coût logarithmique exact est
+\[
+ c(f)=-10^4\log(1-f/10^4),\qquad
+ \mu_f=\mu_0-c(f).
+\]
+Le bid--ask est déjà inclus dans \(\mu_0\). Les frais testés sont des scénarios, pas des tarifs certifiés d'un compte institutionnel.
+
+\begin{table}[H]\centering\small
+\input{results/long_period/table_fees.tex}
+\caption{Grilles positives dans l'historique annuel, au filtre principal d'une seconde. La dernière colonne compte les grilles positives pour lesquelles aucun triangle disponible n'est positif au même coût. Les colonnes ne sont pas des nombres de transactions exécutées.}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{emp_detection.pdf}
+\caption{Coûts, restrictions de fraîcheur et différences entre journées. Le dénominateur du panneau A est la grille active du protocole à une seconde ; les sous-réseaux plus frais constituent une population différente. Le dernier trimestre est réservé au test.}
+\end{figure}
+
+Le plus grand gain moyen nominal enregistré vaut \EmpGlobalPeak{} pb log par conversion. Un maximum historique isolé n'est pas une espérance de gain, et une boucle positive peut provenir de l'asynchronisme des dernières cotations disponibles. Le tableau rend vérifiable la différence entre le test global et le seul test triangulaire dans ce corpus, sans attribuer au vocabulaire géométrique un avantage algorithmique sur Karp.
+
+Sans frais ajoutés, 839\,657 points de grille présentent un cycle positif sans triangle positif, soit environ 5,44\,\% des points positifs du diagnostic global. Avec 0,1 pb par conversion, ce nombre tombe à 462\,445. Le contrôle triangulaire laisse donc effectivement passer certains défauts dans le graphe bid--ask observé. Leur existence ne suffit pas à établir leur accessibilité : au même coût, le nombre global de points positifs passe de 10\,033\,729 à 1\,360\,682 lorsque l'âge admissible passe d'une seconde à 100 ms. Ce changement décrit une restriction de population ; il ne mesure pas, à lui seul, l'effet causal de la fraîcheur sur un gain exécuté.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{emp_geometrie.pdf}
+\caption{Résidu de Hodge et cycles observés. Le panneau A utilise un sous-échantillon temporel déterministe de la cohorte complète ; il n'utilise pas tous les points comme répétitions indépendantes. Le panneau B décrit la longueur de la route USD choisie parmi les candidats positifs. Une association géométrique ne prouve pas une prédiction incrémentale du P\&L.}
+\end{figure}
+
+\subsection{Flux finis avec coefficients historiques}
+
+Le contrôle monétaire utilise \EmpLPCount{} réseaux temporels construits avec des taux et des tailles Dukascopy observés aux dates d'arrivée d'une route et avec un lien explicite de détention du capital USD. Les coefficients futurs sont connus \emph{ex post} pour ce contrôle ; le programme n'est pas une politique prospective.
+
+Les capacités sont exprimées dans la devise vendue. Les prix, tailles, financement et liens de détention sont transformés ensemble pour le test de jauge. L'écart primal--dual absolu maximal est \EmpLPGap{} USD et l'erreur monétaire de changement d'unités est \EmpLPUnitError{} USD. Les entrées des programmes sont livrées pour reproduire ces vérifications. Elles valident l'application du formalisme aux unités des archives, sans établir qu'une réservation de route était disponible.
+
+\begin{callout}{Résultat principal de l'expérience I}
+La détection utilise réellement les 28 paires et les cycles du réseau à huit devises sur les journées entières. Les coûts et la fraîcheur modifient les signaux ; la géométrie et les contraintes monétaires sont contrôlées dans les bonnes unités. Aucun de ces résultats ne transforme les dernières cotations archivées en transactions garanties.
+\end{callout}
+
+\section{Expérience réelle II : enveloppes par journée et test hors période}
+\label{sec:emp-inference}
+
+\subsection{Deux cibles de prix qu'il faut distinguer}
+
+Le recentrage numérique sert au diagnostic instantané. Les transports temporels ci-dessous utilisent les taux bruts dans des unités fixes et une référence de détention en USD ; ils ne recentrent pas indépendamment chaque conversion future. La règle de chemin est figée avant les labels. Pour sa route \(P_t=(e_1,\ldots,e_L)\), on compare
+\begin{equation}
+ \widehat G_t=\sum_{k=1}^L a_{e_k}(t),\qquad
+ G_t^\delta=\sum_{k=1}^L a_{e_k}(t+k\delta),\qquad
+ E_t^\delta=\max\left(0,\frac{\widehat G_t-G_t^\delta}{L}\right).
+ \label{eq:emp-price-target}
+\end{equation}
+Dans la cible \emph{prix archivé}, chaque valeur future est le dernier prix effectivement publié à cette date, même s'il est ancien. C'est une cible observable de reconstruction de prix. Elle ne prétend pas que cette cotation serait encore négociable. La cible \emph{prix futur frais} impose en plus une mise à jour d'âge au plus une seconde à chaque conversion. Un label indisponible reçoit une erreur majorante infinie, plutôt que d'être supprimé après avoir vu le futur.
+
+Cette seconde cible peut rendre le quantile par journée infini. Le rapport la conserve comme résultat négatif : exclure les périodes sans label après la décision produirait une garantie sur une population différente. Une borne infinie déclenche l'abstention et ne reçoit pas une couverture empirique de 100\,\% présentée comme un succès.
+
+La famille de calibration contient tous les chemins produits par la règle sur les grilles de gain nominal brut positif. Elle ne contient pas toutes les décisions adaptatives possibles ni tous les cycles simultanément. Une règle qui modifierait son chemin après examen des labels demanderait une nouvelle calibration ou une famille élargie.
+
+\subsection{Comparateurs et échelles apprises}
+
+Les méthodes comparent un quantile regroupant les erreurs de points, un maximum journalier des erreurs d'arêtes utilisées, un maximum journalier de l'erreur moyenne du chemin, puis sa version normalisée. Le quantile de points est un comparateur descriptif : les points d'une journée ne deviennent pas échangeables ou indépendants parce qu'ils sont nombreux.
+
+Le maximum de chemin conserve les compensations entre conversions. Pour une route de longueur \(L\), sa correction totale est \(Lq\). La boîte d'arêtes utilise le maximum des erreurs élémentaires et peut perdre ces compensations. Il s'agit ici d'une calibration empirique de supports d'erreur, et non de l'affirmation qu'un ellipsoïde appris serait un ensemble physique certain.
+
+La normalisation utilise une échelle positive \(w(L,\text{âge})\), apprise uniquement sur janvier--mars. Les groupes dépendent de la longueur et de quatre classes d'âge maximal du chemin. L'échelle est le quantile d'entraînement à 90\,\% de l'erreur positive moyenne, avec un plancher de 0,01 pb et un repli sur le quantile global si un groupe contient moins de 100 points. Les comptes et valeurs des cellules sont fournis. Le score journalier devient
+\[
+ S_d=\max_{t\in\mathcal I_d}\frac{E_t^\delta}{w(L_t,\text{âge}_t)}.
+\]
+Le rang conforme est celui de la section \ref{sec:ext-inference}, avec \EmpHistCal{} blocs de calibration et la possibilité explicite d'un quantile infini. L'entraînement des échelles et la calibration des maxima sont deux étapes distinctes.
+
+\subsection{Résultats sur octobre--décembre}
+
+\begin{table}[H]\centering\small
+\input{results/long_period/table_price.tex}
+\caption{Cible du dernier prix archivé, délai de 100 ms. Le rayon est exprimé en pb par conversion et moyenné sur les candidats du test pour la méthode normalisée. La couverture concerne les blocs ; les acceptations sont des points de grille, pas des trades indépendants.}
+\end{table}
+
+À 95\,\%, le rayon conjoint non normalisé vaut \EmpNinetyFiveRadius{} pb par conversion et la couverture observée sur les \EmpHistTest{} journées de test est \EmpNinetyFiveCoverage{}\,\%. Au niveau 99\,\%, le rayon vaut \EmpNinetyNineRadius{} pb et la couverture observée \EmpNinetyNineCoverage{}\,\%. Ces fréquences sont des résultats du découpage déclaré, pas une vérification générale de l'échangeabilité des journées.
+
+Le contraste essentiel porte sur l'unité statistique. Le quantile regroupant les points couvre \EmpPooledPointCoverage{}\,\% des points, mais \EmpPooledBlockCoverage{}\,\% des journées intégralement : chaque journée possède au moins un dépassement. Il accepte \EmpPooledAccept{} points, dont \EmpPooledLosses{} ont un rendement de prix non positif après frais, et \EmpPooledUnfresh{} rencontrent au moins une conversion future trop ancienne. Le très grand nombre de points ne remplace donc pas la calibration de l'événement journalier visé.
+
+La borne d'arêtes à 95\,\% est plus large (30,291 pb par conversion) que la borne conjointe de chemin (\EmpNinetyFiveRadius{} pb). La compensation entre conversions réduit ici l'enveloppe, mais une seule grille est encore acceptée par la borne conjointe. La normalisation réduit le rayon moyen à \EmpScaledRadius{} pb et accepte \EmpScaledAccept{} points, dont un à perte de prix. Sa couverture journalière observée est \EmpScaledCoverage{}\,\%, soit 61 jours sur 66, inférieure au niveau nominal de 95\,\%. Cette fréquence de test finie n'est ni une preuve de validité sous dépendance temporelle, ni à elle seule une réfutation d'une borne marginale sous échangeabilité. Elle impose de ne pas présenter cette variante comme une amélioration établie sur tous les critères. Au niveau 99\,\%, les bornes conjointes normalisée et non normalisée n'acceptent aucune grille.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{emp_calibration.pdf}
+\caption{Couverture des points, couverture des journées et largeur des enveloppes de prix. Les quantiles sont appris avant le dernier trimestre. Une bonne couverture de prix ne constitue ni une garantie conditionnelle parmi les acceptations ni une promesse de remplissage.}
+\end{figure}
+
+\begin{table}[H]\centering\small
+\input{results/long_period/table_selection.tex}
+\caption{Sélection selon les bornes à 95\,\%. « Perte de prix » signifie que le rendement composé aux derniers prix archivés futurs, frais compris, est non positif. « Futur non frais » compte les acceptations dont au moins une conversion future ne satisfait pas le filtre d'une seconde. Les délais sont des scénarios séparés ; aucune garantie simultanée sur un délai choisi après le test n'est revendiquée.}
+\end{table}
+
+Les acceptations d'une borne sur prix archivés peuvent rencontrer une cotation trop ancienne au moment de la conversion. Elles ne sont donc pas renommées \emph{opérations exécutables}. Inversement, une borne large ou infinie peut être valide mais ne produire aucune occasion utilisable. Le nombre de points observés, le nombre de blocs et le nombre d'acceptations informatives répondent à des questions différentes.
+
+Pour la cible exigeant des prix futurs frais, chacun des 121 blocs de calibration contient au moins un label manquant dans la famille étudiée. Les maxima journaliers sont alors infinis aux trois délais, et les bornes de bloc s'abstiennent. Ce résultat porte sur une exigence simultanée sur une très grande famille de candidats. Il ne signifie pas que tous les prix futurs sont manquants, mais que les archives ne suffisent pas à certifier cette exigence globale avec le protocole choisi.
+
+\begin{callout}{Résultat principal de l'expérience II}
+La longue période permet une calibration et un test par journées, y compris au niveau 99\,\% lorsque le rang est résolu. Les compensations et la normalisation peuvent être évaluées sur de vrais prix. La garantie reste conditionnelle aux hypothèses statistiques et à la cible de prix annoncée ; le manque de labels frais conduit à l'abstention.
+\end{callout}
+
+\clearpage
+\section{Expérience réelle III : tailles publiées, exécution et cash}
+\label{sec:emp-execution}
+
+\subsection{Ce que les archives permettent de rejouer}
+
+Le rejeu utilise exclusivement les dates Dukascopy dont les 28 paquets ont été reçus. Le corpus commence en janvier et s'arrête aux dates disponibles de mars ; il n'est pas étendu artificiellement à toute l'année. Les volumes sont ceux associés aux meilleurs bid/ask. Le fournisseur n'archive pas l'intégralité du carnet de profondeur \cite{emp-duka-faq}.
+
+Chaque journée part de 1\,000\,000 USD. Une tentative engage 100\,000 USD et les ordres sont séquentiels, espacés de 100 ms dans le scénario principal. Les frais ajoutés sont de 0,1 pb par conversion. Les sensibilités portent sur 50 et 500 ms, des frais nuls ou plus élevés et des montants de 10\,000 et 1\,000\,000 USD. Le capital de départ est alors dix fois le montant pour conserver le même ratio de financement.
+
+Un FOK hypothétique remplit la quantité entière seulement si la taille de tête publiée suffit dans la devise vendue. Une version économique est changée lorsque le bid, l'ask ou les tailles changent ; des répétitions identiques ne reconstituent pas la liquidité déjà consommée. Deux tentatives ne se chevauchent pas sur le compte, et un même épisode de route n'est traité qu'une fois par politique. Ces conventions évitent de dépenser plusieurs fois le même capital ou la même quantité inchangée.
+
+Une jambe refusée interrompt la boucle. Une liquidation directe vers USD est tentée avec les tailles disponibles ; elle peut être partielle. Si une position reste ouverte, le compte du jour est gelé. Son P\&L complet reste inconnu. Le programme ne lui attribue ni zéro gain ni une clôture illimitée à un prix favorable. Les flux des épisodes fermés et les pénalités conservatrices de sélection sont rapportés séparément.
+
+Les remplissages sont des \emph{contrefactuels du modèle de tête de carnet}. La priorité, les annulations concurrentes, la fermeté, le last look, le temps de réception réel, les crédits et dates de valeur ne sont pas reconstitués à partir des seules cotations. Aucune probabilité de rejet observée n'est déduite de ces fichiers. Les scénarios ne sont pas des journaux de transactions effectivement passées.
+
+\subsection{Résultats du test et montants non fermés}
+
+\begin{table}[H]\centering\small
+\input{results/long_period/table_cash.tex}
+\caption{Rejeu sur les \EmpDukaTest{} dates de test du lundi au vendredi. Les pertes comptent les épisodes fermés à P\&L strictement négatif. Une position non fermée est indiquée séparément. La dernière colonne ne constitue donc pas le P\&L complet d'une règle si cette règle possède un inventaire résiduel. Les montants des sensibilités diffèrent, ce qui doit être pris en compte avant de comparer les USD.}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{emp_execution.pdf}
+\caption{Exécution conditionnelle au modèle de quantités et flux connus sur le test. L'annotation « 0 ordre » distingue une abstention d'une série gagnante sans perte. Les barres de cash incluent seulement les épisodes fermés ; les inventaires restants ne sont pas valorisés comme des gains.}
+\end{figure}
+
+Dans le scénario principal, \EmpBaseAttempts{} tentatives conduisent à \EmpBaseLosses{} pertes fermées et \EmpBaseOpen{} positions non fermées. Les épisodes fermés totalisent \EmpBaseClosedCash{} USD. Le filtre d'âge de 100 ms donne, dans le même modèle, \EmpAgeAttempts{} tentatives, \EmpAgeLosses{} pertes fermées, \EmpAgeOpen{} position restante et \EmpAgeClosedCash{} USD sur les épisodes fermés. Le nombre de tentatives augmente parce que le compte est gelé moins souvent ; il n'est pas le simple nombre de candidats d'un sous-ensemble à capital illimité.
+
+Pour rendre visible l'effet des positions restantes, un second indicateur crédite les recettes USD déjà récupérées et valorise à zéro l'inventaire long résiduel :
+\[
+ \underline{\Delta C}
+ =\sum_{a\,\text{fermé}}\operatorname{PnL}_a
+  +\sum_{a\,\text{non fermé}}(U_a-N_a),
+\]
+où \(N_a\) est le montant engagé et \(U_a\) le montant USD récupéré avant gel. C'est un plancher comptable dans ce modèle sans dette ni coût ultérieur imposé au détenteur ; ce n'est pas une valorisation complète de la position. Il vaut \EmpBaseFloor{} USD pour le scénario principal et \EmpAgeFloor{} USD avec le filtre de 100 ms. Le résultat positif de ce dernier scénario est donc conservé même après cette décote des inventaires, avec les limites d'exécution énoncées plus haut.
+
+Ces sommes agrègent onze expériences journalières dotées chacune d'un capital initial propre. Elles ne sont pas le rendement composé d'un compte continu. En particulier, le compte gelé un jour n'est pas remis à disposition le lendemain par une liquidation supposée gratuite dans un portefeuille unique.
+
+\begin{table}[H]\centering\small
+\input{results/long_period/table_robustness.tex}
+\caption{Sensibilité du filtre d'âge de 100 ms, montant de 100\,000 USD. Les quatre variantes supplémentaires constituent un suivi exploratoire après le premier résumé de test ; elles ne changent pas la famille de huit politiques soumise à validation. Le plancher inclut les USD récupérés et décote à zéro les inventaires résiduels.}
+\end{table}
+
+Le plancher reste positif à 0,2 puis 0,5 pb de frais par conversion, avec respectivement environ 36\,427 et 7\,464 USD. Il vaut environ 47\,945 USD au délai de 50 ms. À 500 ms, dix positions restent ouvertes et il tombe à environ $-999\,645$ USD, malgré un solde légèrement positif des épisodes fermés. Le délai et les échecs de liquidation sont donc déterminants dans ce modèle. Cette sensibilité exploratoire identifie une piste à tester avec des journaux d'ordres ; elle ne fournit ni sélection indépendante supplémentaire ni estimation de la probabilité réelle de remplissage.
+
+Une borne calibrée sur le résultat aux prix futurs archivés n'inclut pas automatiquement les refus pour taille insuffisante, l'ancienneté au moment de l'ordre ou les coûts de liquidation. La comparaison reprend ainsi sur les prix historiques la distinction mise en évidence par le simulateur : gain nominal, survie du gain de prix et résultat monétaire ne sont pas le même objet.
+
+\subsection{Validation d'une famille fixée et abstention}
+
+Les huit seuils \(0,0{,}1,0{,}25,0{,}5,1,2,4,8\) pb de rendement simple sont fixés avant les labels. La validation ne sélectionne qu'entre ces règles, au montant et délai principaux. Les autres scénarios servent de sensibilités et ne sont pas ajoutés après coup à cette famille sans correction supplémentaire.
+
+Le label journalier vaut 1 si au moins une tentative est perdante ou reste non fermée. C'est un critère plus fort que le signe du P\&L agrégé de la journée et différent du taux de perte par trade. Il ne faut pas l'utiliser pour conclure qu'une méthode ayant une seule perte mais un bilan quotidien positif est nécessairement perdante en espérance.
+
+\begin{table}[H]\centering\small
+\input{results/long_period/table_risk.tex}
+\caption{Calibration Dukascopy : borne binomiale unilatérale corrigée sur huit politiques. Elle concerne les labels hypothétiques du rejeu, sous indépendance et même loi des blocs ; elle ne certifie pas le risque réel d'un compte de marché.}
+\end{table}
+
+Le faible nombre de dates de calibration ne peut pas être compensé par le nombre de ticks corrélés. Même avec zéro perte, il faudrait 99 journées acceptées indépendantes pour valider un risque de 5\,\% avec la correction sur huit règles. Les \EmpDukaCal{} dates disponibles au total ne suffisent pas à cette résolution. Les règles ne satisfaisant pas le critère ne sont pas déclarées sûres ; la procédure de validation peut s'abstenir.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{emp_risque.pdf}
+\caption{Risque conditionnel par journée et effectif informatif. Le panneau A utilise les labels du rejeu ; le panneau B montre la meilleure borne théoriquement possible si aucune perte n'était observée. Cette courbe optimiste n'est pas un résultat empirique de marché.}
+\end{figure}
+
+Les journées annuelles HistData ne sont pas ajoutées à ces essais de quantité avec des remplissages supposés ou des pertes mises à zéro. Elles apportent des informations sur les prix, mais ne fournissent pas les tailles et labels monétaires manquants.
+
+\begin{callout}{Résultat principal de l'expérience III}
+Les quantités publiées permettent un rejeu monétaire plus informatif que des prix seuls, avec consommation, financement et positions restantes explicites. Elles ne révèlent pas les exécutions réelles. L'abstention d'un contrôle exigeant et le manque de blocs informatifs sont des résultats à conserver.
+\end{callout}
+
+\section{Reproduction, portée et suite du travail}
+
+Les originaux sont fournis par mois, avec les fichiers de contexte clairement distingués des données de l'année étudiée. Le code reproduit le téléchargement, la conversion UTC, l'audit, la reconstruction causale au temps source, les diagnostics, les labels et le rejeu. Les résultats numériques, paramètres, échelles apprises, traces d'ordres hypothétiques et contrôles de flux sont livrés avec les figures vectorielles. Les caches peuvent être reconstruits depuis les archives et ne remplacent pas celles-ci.
+
+L'apport empirique est le passage effectif de quelques fenêtres à un réseau de huit devises sur des journées entières, avec une campagne annuelle de prix et un sous-corpus de quantités dont la couverture réelle est annoncée. La confrontation des sources montre aussi qu'une seconde distribution de données ne constitue pas automatiquement une validation indépendante.
+
+Les propositions de géométrie, de dualité et de calibration gardent leurs hypothèses. La quantité de données ne prouve ni l'échangeabilité du marché, ni une réservation de liquidité, ni la nouveauté générale des outils utilisés. Pour revendiquer une stratégie réellement exploitable, il manque toujours des temps de réception, conditions de compte et journaux d'ordres/exécutions adaptés. La présente campagne évalue des objets observables et des modèles explicitement conditionnels, sans remplacer ces éléments par des simulations non déclarées.
+
+\clearpage
+\renewcommand{\refname}{Sources de la campagne empirique}
+\begin{thebibliography}{99}
+\setcounter{enumiv}{30}
+\bibitem{emp-hist-spec} HistData. \emph{Data Files: Detailed Specification}. Generic ASCII Tick : bid, ask, temps avec millisecondes et EST fixe. \url{https://www.histdata.com/f-a-q/data-files-detailed-specification/}.
+\bibitem{emp-hist-faq} HistData. \emph{F.A.Q. / Support}. Format, fourchettes, volumes et interruptions. \url{https://www.histdata.com/f-a-q/}.
+\bibitem{emp-duka-faq} Dukascopy Bank. \emph{F.A.Q. -- Historical Price Feed}. Historique des meilleurs bid/ask et volumes associés ; absence de carnet complet historique. \url{https://www.dukascopy.com/swiss/english/about/faq/}.
+\bibitem{emp-duka-export} Dukascopy Bank. \emph{Historical Data Export}. \url{https://www.dukascopy.com/swiss/english/marketwatch/historical/}.
+\bibitem{emp-duka-bulk} Dukascopy. \emph{Historical Price Data}. Format binaire journalier et documentation d'accès massif. \url{https://wiki.dukascopy.com/en/development/data-export/}.
+\end{thebibliography}

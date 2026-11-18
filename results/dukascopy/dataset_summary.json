@@ -1,0 +1,25 @@
+{
+  "first_date": "2024-01-02",
+  "last_date": "2024-03-20",
+  "dates": 65,
+  "weekday_dates": 54,
+  "raw_ticks": 129359071,
+  "valid_ticks": 129359071,
+  "invalid_ticks": 0,
+  "whole_second_fraction": 0.0009205925729012077,
+  "duplicate_timestamp_fraction": 0.0,
+  "unknown_size_fraction": 0.0,
+  "grid_points": 56160000,
+  "active_grid_points": 45246697,
+  "full_28_fresh_points": 1599259,
+  "candidate_frames": 2153889,
+  "candidate_episodes": 400528,
+  "phase_weekdays": {
+    "training": 22,
+    "calibration": 21,
+    "test": 11
+  },
+  "previously_explored_dates_excluded_from_calibration": [],
+  "global_max_mean_bp": 14.521617751752046,
+  "hodge_rms_average_full_network": 0.19992936538986963
+}

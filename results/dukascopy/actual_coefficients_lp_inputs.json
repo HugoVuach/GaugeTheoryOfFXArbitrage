@@ -1,0 +1,2317 @@
+[
+  {
+    "date": "2024-01-02",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9060260394487684,
+        "capacity": 3973355.894742012
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 155.75444244000002,
+        "capacity": 1799999.9523162842
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.007086197366742726,
+        "capacity": 169341606.7290306
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-03",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 142.05157947,
+        "capacity": 2029999.9713897705
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006432251632200174,
+        "capacity": 186558007.41314888
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0943590563,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-04",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 142.9485705,
+        "capacity": 5400000.095367432
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006402107594896189,
+        "capacity": 187436407.44805336
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0925790741,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-05",
+    "candidate": 0,
+    "route": [
+      0,
+      4,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.8502814971,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 170.25929739,
+        "capacity": 1120000.0047683716
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006907057702137066,
+        "capacity": 173733606.903553
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-07",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9144437840062183,
+        "capacity": 2952585.0521445274
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 158.38541613,
+        "capacity": 1350000.023841858
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006903910413962608,
+        "capacity": 173812806.90670013
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-08",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 144.74355255,
+        "capacity": 3599999.9046325684
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006311992274044198,
+        "capacity": 285168592.44561195
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0944390554999999,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-09",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9129077314928928,
+        "capacity": 4929255.0
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 157.89642102,
+        "capacity": 2470000.0286102295
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.00693681194808438,
+        "capacity": 259482593.1260586
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-10",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 144.46255536,
+        "capacity": 4500000.0
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006331014048660661,
+        "capacity": 189541207.5316906
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0933190667,
+        "capacity": 119999.99731779099
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-11",
+    "candidate": 1,
+    "route": [
+      0,
+      6,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 1.3378666212,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 108.85491144,
+        "capacity": 1169999.9570846558
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.0068659883002389396,
+        "capacity": 174772806.9448471
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-12",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      6
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 145.12454874000002,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.00921615792966158,
+        "capacity": 130204805.1738739
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.7475554691705042,
+        "capacity": 1605216.063785553
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-14",
+    "candidate": 0,
+    "route": [
+      0,
+      7,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 1.6048370271701624,
+        "capacity": 996976.0148561002
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 90.44309556,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006888027111545827,
+        "capacity": 174213606.9226265
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-15",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 145.21954779,
+        "capacity": 1889999.9856948853
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.0062933220891520925,
+        "capacity": 249468298.33447933
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0941090588,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-16",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 145.75254246,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006267957878901843,
+        "capacity": 191448007.60746002
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0945190547,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-17",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9193788614298324,
+        "capacity": 4992451.365966797
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 160.32039678,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.0067838244871377415,
+        "capacity": 1074604314.376831
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-18",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.11551882999998,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006201372997711671,
+        "capacity": 193503607.6891422
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0886091138,
+        "capacity": 3599999.9046325684
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-19",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      7
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.12051878000003,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.01103254633715799,
+        "capacity": 101516800.4322052
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.6119238807,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-21",
+    "candidate": 0,
+    "route": [
+      0,
+      2,
+      4
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.787424701759912,
+        "capacity": 253990.0037847459
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 1.1031589683,
+        "capacity": 629999.9952316284
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.1513591931194087,
+        "capacity": 434265.0
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-22",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.1185188,
+        "capacity": 2970000.0286102295
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006196377561453189,
+        "capacity": 193659607.6953411
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0892791071,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-23",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.19151807000003,
+        "capacity": 5039999.961853027
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006203912226172085,
+        "capacity": 180529440.7685995
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0876091238,
+        "capacity": 5400000.095367432
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-24",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      5
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.23351765,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.010246639068776129,
+        "capacity": 140532485.58425903
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.6585534144,
+        "capacity": 2700000.047683716
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-25",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      5
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 147.58252416000002,
+        "capacity": 4500000.0
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.010305244391314654,
+        "capacity": 116444404.62708473
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.6575034249,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-26",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      7
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 147.72152277,
+        "capacity": 3599999.9046325684
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.01108341461251995,
+        "capacity": 126313597.84889221
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.6107538924,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-28",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      4
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.921955671928013,
+        "capacity": 976175.9741401672
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.9378606213,
+        "capacity": 1299999.9523162842
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.1565123863715219,
+        "capacity": 1037592.0412302017
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-29",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.28751710999998,
+        "capacity": 4500000.0
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.0062194234536803806,
+        "capacity": 289412992.33317375
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0841991578999999,
+        "capacity": 4590000.152587891
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-30",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      5
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 147.41552583,
+        "capacity": 5400000.095367432
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.010254204265791633,
+        "capacity": 117024004.65011597
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.6614033859,
+        "capacity": 1889999.9856948853
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-01-31",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9221086992604616,
+        "capacity": 976013.9741444588
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 159.65940339000002,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.0067918876882220695,
+        "capacity": 176679607.02061653
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-01",
+    "candidate": 0,
+    "route": [
+      0,
+      6,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 1.3428665712,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 109.40090598,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006806079250779305,
+        "capacity": 176311207.00597763
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-02",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      7
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 146.47153527000003,
+        "capacity": 3599999.9046325684
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.011111000000000001,
+        "capacity": 118800004.72068787
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.6144438555,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-04",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      4
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9272818315853896,
+        "capacity": 970568.9742887021
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.9347806521,
+        "capacity": 22500000.0
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.1531117030477047,
+        "capacity": 650407.5
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-05",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      7,
+      2
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.54751451,
+        "capacity": 4239999.771118164
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.011115693292723595,
+        "capacity": 107954404.28972244
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.4800051841078295,
+        "capacity": 18749610.0
+      },
+      {
+        "source": 3,
+        "destination": 4,
+        "rate": 1.2615573843,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 4,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-06",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.65151347,
+        "capacity": 2339999.9141693115
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006262462424849699,
+        "capacity": 191616007.61413574
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0741192587000001,
+        "capacity": 3599999.9046325684
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-07",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9295833565731497,
+        "capacity": 968165.9743523597
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 159.07140927,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006762172031376793,
+        "capacity": 266183992.9485321
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-08",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9280219015358916,
+        "capacity": 969794.974309206
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 159.56140437,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006753084502191398,
+        "capacity": 177694807.06095695
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-09",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      4,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9277894268059602,
+        "capacity": 129338.39710906148
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.9413205867000001,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 170.88629112,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 3,
+        "destination": 4,
+        "rate": 0.006700055611017682,
+        "capacity": 256711724.27010536
+      },
+      {
+        "source": 0,
+        "destination": 4,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-12",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 149.1185088,
+        "capacity": 4179999.828338623
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006211040856635321,
+        "capacity": 193202407.6771736
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0796192037,
+        "capacity": 449999.98807907104
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-13",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 149.39650602,
+        "capacity": 3349999.9046325684
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006216021333598554,
+        "capacity": 193047607.67102242
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0767392325000003,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-14",
+    "candidate": 1,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.934011432414257,
+        "capacity": 963575.9744739532
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 161.38338615,
+        "capacity": 1350000.023841858
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006633564847061632,
+        "capacity": 542689185.6236458
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-15",
+    "candidate": 0,
+    "route": [
+      0,
+      5,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 1.5403656864708328,
+        "capacity": 1168541.9690442085
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 97.62602373,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.0066455557401561725,
+        "capacity": 180570007.17520714
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-16",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 150.14849850000002,
+        "capacity": 5400000.095367432
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.0061861429013300336,
+        "capacity": 193980007.70807266
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0764792351,
+        "capacity": 3150000.0953674316
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-19",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 149.95250046,
+        "capacity": 2980000.0190734863
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006180942726811961,
+        "capacity": 194143207.71455765
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0788392115,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-20",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 150.24749751,
+        "capacity": 2529999.9713897705
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006178116891140491,
+        "capacity": 194232007.71808627
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0772192277,
+        "capacity": 3599999.9046325684
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-21",
+    "candidate": 0,
+    "route": [
+      0,
+      4,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.8818511814000001,
+        "capacity": 1350000.023841858
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 170.08029918,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006668022511469114,
+        "capacity": 179961607.1510315
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-22",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9241710103138517,
+        "capacity": 973835.974202156
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 162.68037318,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006651036574415867,
+        "capacity": 676579500.0
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-23",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9236673655819625,
+        "capacity": 3897467.8967523575
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 162.84137157,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006647587898609975,
+        "capacity": 710024848.4387398
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-26",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9242478857618189,
+        "capacity": 1947509.9484086037
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 162.76037238,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006647190204602561,
+        "capacity": 880062285.6531142
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-27",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9216072992028017,
+        "capacity": 976544.9741303922
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 163.35436644,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006642421585429039,
+        "capacity": 198720727.89645195
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-28",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 150.50649492000002,
+        "capacity": 1799999.9523162842
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006127051816995387,
+        "capacity": 195850807.78241158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0843791561,
+        "capacity": 990000.0095367432
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-02-29",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.92261915745576,
+        "capacity": 4877370.0
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 163.26636732,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.00663818855299319,
+        "capacity": 180770407.18317032
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-01",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9249061210899203,
+        "capacity": 1946123.9484453201
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 162.39737601000002,
+        "capacity": 1600000.023841858
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006657368449083937,
+        "capacity": 180249607.1624756
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-03",
+    "candidate": 0,
+    "route": [
+      0,
+      2,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.7901311630847029,
+        "capacity": 5695200.0
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 1.1673534664907839,
+        "capacity": 385483.48978817463
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0841291586000001,
+        "capacity": 4500000.0
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-04",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.922363857733176,
+        "capacity": 3024806.358642578
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 162.73637262,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.0066615372317039056,
+        "capacity": 180136807.15799332
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-05",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9214629291756511,
+        "capacity": 976697.9741263391
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 163.27136727,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.0066463066104826595,
+        "capacity": 180549607.1743965
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-06",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 150.0284997,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006140747336424207,
+        "capacity": 195414007.7650547
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0853991459,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-07",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9168752578737451,
+        "capacity": 981584.9739968776
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 162.44637552,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.0067137754622480636,
+        "capacity": 178735207.10229874
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-08",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 147.71452284,
+        "capacity": 4550000.190734863
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006181324794777964,
+        "capacity": 194131207.7140808
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0951390485,
+        "capacity": 1799999.9523162842
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-10",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      2
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9141512021208519,
+        "capacity": 492254.9869596959
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.8509014909000001,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.2855071448,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-11",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      4
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9139757428412135,
+        "capacity": 984698.9739143847
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.9600103998,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.1395637706263106,
+        "capacity": 1053024.0418434143
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-14",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 147.55552443,
+        "capacity": 1320000.0524520874
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.0061879420555311475,
+        "capacity": 193923607.70583153
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0951090488000002,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-15",
+    "candidate": 0,
+    "route": [
+      0,
+      3,
+      1
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 148.27951719,
+        "capacity": 1799999.9523162842
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.006196761540034579,
+        "capacity": 193647607.69486427
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.0882391175,
+        "capacity": 4949999.809265137
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-17",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      2
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9183487923592617,
+        "capacity": 980009.9740386009
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.8549014509,
+        "capacity": 449999.98807907104
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 1.2736972628999998,
+        "capacity": 899999.9761581421
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-18",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      4,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9189564226506645,
+        "capacity": 5386490.7924461365
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 0.9615403845,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 168.64131357000002,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 3,
+        "destination": 4,
+        "rate": 0.006710171379490827,
+        "capacity": 938863828.4244539
+      },
+      {
+        "source": 0,
+        "destination": 4,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  },
+  {
+    "date": "2024-03-20",
+    "candidate": 0,
+    "route": [
+      0,
+      1,
+      3
+    ],
+    "edges": [
+      {
+        "source": 0,
+        "destination": 1,
+        "rate": 0.9206739400635272,
+        "capacity": 977534.974104166
+      },
+      {
+        "source": 1,
+        "destination": 2,
+        "rate": 164.17135827,
+        "capacity": 1200000.0476837158
+      },
+      {
+        "source": 2,
+        "destination": 3,
+        "rate": 0.006614652925690246,
+        "capacity": 272120392.7912712
+      },
+      {
+        "source": 0,
+        "destination": 3,
+        "rate": 1.0,
+        "capacity": 100000.0
+      }
+    ],
+    "initial_amount": 100000,
+    "interpretation": "future coefficients known ex post; no reservation or execution claim"
+  }
+]

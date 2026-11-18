@@ -1,0 +1,19 @@
+{
+  "delimiter": ",",
+  "encoding": "utf-8-sig",
+  "source_timezone": null,
+  "timestamp_unit": null,
+  "columns": {
+    "market_ts": "timestamp_market_utc",
+    "receive_ts": "timestamp_receive_utc",
+    "venue": "venue",
+    "base": "base",
+    "quote": "quote",
+    "bid": "bid",
+    "ask": "ask",
+    "bid_size": "bid_size_base",
+    "ask_size": "ask_size_base",
+    "quote_id": "quote_id",
+    "firm": "firm"
+  }
+}

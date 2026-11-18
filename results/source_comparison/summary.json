@@ -1,0 +1,9 @@
+{
+  "pair_days_compared": 1820,
+  "dates": 65,
+  "identical_timestamp_pair_days": 1801,
+  "identical_price_pair_days": 1801,
+  "matched_dukascopy_rows": 127396628,
+  "comparison_resolution": "original integer millisecond timestamps, bid/ask rounded only to native instrument tick units",
+  "inference_limit": "agreement on this overlap does not establish independent sources or identity outside the observed overlap"
+}

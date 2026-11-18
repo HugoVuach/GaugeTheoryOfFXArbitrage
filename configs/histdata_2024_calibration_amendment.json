@@ -1,0 +1,21 @@
+{
+  "amendment": "Exclude previously explored full UTC days from calibration; keep every raw/descriptive observation",
+  "dates": [
+    "2024-06-10",
+    "2024-06-11",
+    "2024-06-12",
+    "2024-06-13",
+    "2024-06-14",
+    "2024-07-08",
+    "2024-07-09",
+    "2024-07-10",
+    "2024-07-11",
+    "2024-07-12"
+  ],
+  "reason": "June 10\u201314 and July 8\u201312 were already used in the preceding four-currency report; this avoids calibration reuse of that exploratory material",
+  "selection_basis": "prior-use provenance, not the new test performance",
+  "test_period_unchanged": [
+    "2024-10-01",
+    "2025-01-01"
+  ]
+}

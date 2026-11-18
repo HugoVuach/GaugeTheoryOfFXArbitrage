@@ -1,0 +1,60 @@
+{
+  "report_pages": 63,
+  "original_pages_preserved": 50,
+  "new_campaign_first_page": 51,
+  "experiment_first_pages": [
+    54,
+    56,
+    59
+  ],
+  "currencies": [
+    "USD",
+    "EUR",
+    "GBP",
+    "JPY",
+    "CHF",
+    "AUD",
+    "CAD",
+    "NZD"
+  ],
+  "direct_pairs": 28,
+  "annual_price_source": "HistData: original Generic ASCII Tick ZIPs, January–December 2024 plus December 2023 UTC context",
+  "annual_raw_valid_ticks": 663387055,
+  "quantity_source": "Dukascopy: only received 65 complete pair-dates groups, 2024-01-02 through 2024-03-20",
+  "quantity_raw_valid_ticks": 129359071,
+  "calibration_dates_excluded_for_prior_exploration": {
+    "amendment": "Exclude previously explored full UTC days from calibration; keep every raw/descriptive observation",
+    "dates": [
+      "2024-06-10",
+      "2024-06-11",
+      "2024-06-12",
+      "2024-06-13",
+      "2024-06-14",
+      "2024-07-08",
+      "2024-07-09",
+      "2024-07-10",
+      "2024-07-11",
+      "2024-07-12"
+    ],
+    "reason": "June 10–14 and July 8–12 were already used in the preceding four-currency report; this avoids calibration reuse of that exploratory material",
+    "selection_basis": "prior-use provenance, not the new test performance",
+    "test_period_unchanged": [
+      "2024-10-01",
+      "2025-01-01"
+    ]
+  },
+  "unit_tests": "24 passed",
+  "hypothetical_cash_audit": {
+    "daily_policy_blocks": 1690,
+    "attempts_checked": 218321,
+    "methods": 26,
+    "test_days": 11,
+    "status": "all checks passed"
+  },
+  "raw_archives_delivered_separately": 16,
+  "raw_index": "Donnees_Brutes_FX_8_Devises_2024.md",
+  "standalone_pdf_sha256": "59b0e465e73ec45d5357ddb98ba1b57365913a9d0d9f59087ed85cf60e9020e1",
+  "standalone_tex_sha256": "698053e002631914d2a62d0b85cdac74d9d6a0d9e9680639f6f9daad12808495",
+  "execution_status": "source-clock counterfactual top-of-book replay; no actual fills or receiver timestamps are inferred",
+  "compact_reproduction": "Six figures and all new tables regenerated without raw ticks or per-frame caches; standalone source identical"
+}

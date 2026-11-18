@@ -1,0 +1,20 @@
+{
+  "seed": 131501,
+  "training_blocks": 80,
+  "calibration_blocks": 199,
+  "test_blocks_per_regime": 400,
+  "times_per_block": 32,
+  "actions": 24,
+  "alpha": 0.05,
+  "joint_radius_bp": 2.157573009181009,
+  "online_blocks": 3000,
+  "online_fixed_error_frequency": 0.5103333333333333,
+  "online_adaptive_error_frequency": 0.050333333333333334,
+  "aci_identity_error": 5.0415401020575956e-17,
+  "aci_infinite_intervals": 0,
+  "aci_empty_intervals": 0,
+  "selection_counterexample_marginal_coverage": 0.95095,
+  "selection_counterexample_bad_among_selected": 1.0,
+  "existing_five_calibration_windows_radius_at_one_percent": "infinite",
+  "status": "synthetic prediction-error panels; exchangeability is imposed only in the first regime"
+}

@@ -1,0 +1,40 @@
+{
+  "target": "hypothetical_replay_daily_any_loss",
+  "block_unit": "UTC_day",
+  "family_fixed_before_calibration": true,
+  "policies": [
+    {
+      "policy_id": "threshold_0",
+      "minimum_predicted_return_bp": 0.0
+    },
+    {
+      "policy_id": "threshold_05",
+      "minimum_predicted_return_bp": 0.5
+    },
+    {
+      "policy_id": "threshold_1",
+      "minimum_predicted_return_bp": 1.0
+    },
+    {
+      "policy_id": "threshold_2",
+      "minimum_predicted_return_bp": 2.0
+    },
+    {
+      "policy_id": "threshold_3",
+      "minimum_predicted_return_bp": 3.0
+    },
+    {
+      "policy_id": "threshold_4",
+      "minimum_predicted_return_bp": 4.0
+    },
+    {
+      "policy_id": "threshold_6",
+      "minimum_predicted_return_bp": 6.0
+    },
+    {
+      "policy_id": "threshold_8",
+      "minimum_predicted_return_bp": 8.0
+    }
+  ],
+  "threshold_unit": "simple_return_basis_points_after_detection_fees"
+}

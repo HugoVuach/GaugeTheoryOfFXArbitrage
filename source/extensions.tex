@@ -1,0 +1,689 @@
+\clearpage
+\part{De la cotation à l'exécution : développements complémentaires}
+\label{part:execution-extension}
+\input{results/extension/extension_valeurs.tex}
+\newcommand{\Prob}{\mathbb P}
+\newcommand{\Esp}{\mathbb E}
+
+\section{Question de recherche et statut des contributions}
+\label{sec:ext-perimetre}
+
+Les sections précédentes établissent le lien entre connexion, potentiel et fourchettes, puis mesurent la fragilité temporelle des signaux. Ce complément développe l'étape suivante : quelles hypothèses permettent de passer d'une incohérence observée à un résultat monétaire exécutable, et quelles garanties statistiques restent valables après sélection d'une opération ? Le texte initial et ses trois expériences sont conservés. Les expériences 4 à 6 ci-dessous sont de nouveaux calculs synthétiques, séparés de l'évaluation HistData.
+
+Trois objets sont distingués. Un \emph{signal de cotation} est un cycle positif dans une matrice reconstruite. Un \emph{résultat de rejeu} utilise des prix ultérieurs selon des règles annoncées. Un \emph{gain exécuté} exige des quantités effectivement échangées et des frais réconciliés. Un gain aléatoire d'espérance positive n'est pas un arbitrage sans risque. Une réservation ferme de toutes les conversions et un contrôle statistique des pertes répondent, eux aussi, à deux questions différentes.
+
+Dans les fenêtres de juillet, le meilleur gain nominal total est de \JuilletGainPic{} pb log et un coût supplémentaire de 0,10 pb par conversion efface tous les signaux frais. Les archives ne fournissent pas de profondeur disponible ni de journaux d'ordres. Le programme ajouté ne transforme donc pas les \JuilletNet{} alertes en profits réels. Il prépare un modèle d'exécution, des contrôles falsifiables et une ingestion de données plus étendue.
+
+\subsection{Positionnement bibliographique}
+
+Les outils généraux de ce complément ont des antécédents identifiés. Les résultats suivants sont démontrés dans les conventions du projet pour rendre les hypothèses vérifiables ; leur présentation ne constitue pas une revendication de priorité sur ces outils.
+
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}p{42mm}YY@{}}
+\toprule
+Travaux & Résultat déjà établi & Usage dans ce complément\\
+\midrule
+Fenn et al., Ito et al. \cite{fenn,ito} & Délais, prix exécutables et risque de boucle incomplète. & Séparer signal, remplissage et liquidation.\\
+Schachermayer \cite{schachermayer} & Absence d'arbitrage avec coûts proportionnels. & Ne pas confondre le programme fini ci-dessous et un théorème stochastique général.\\
+Ben-Tal et Nemirovski \cite{ext-robust} & Optimisation robuste et ensembles ellipsoïdaux. & Calculer exactement le support d'une incertitude corrélée sur un trajet.\\
+Lei et al. \cite{ext-lei} & Couverture conforme en échantillon fini sous échangeabilité. & Calibrer un maximum par bloc, avec correction de rang et possibilité d'une borne infinie.\\
+Gibbs et Candès \cite{ext-aci,ext-aci-new} & Adaptation de la couverture en ligne. & Distinguer une fréquence d'erreur d'une probabilité conditionnelle de perte.\\
+Angelopoulos et al. \cite{ext-ltt} & Validation de règles prédictives par tests multiples. & Sélectionner une politique parmi une famille figée avec une borne sur le risque parmi les acceptées.\\
+Huang et al. \cite{ext-liquidity}, GFXC \cite{ext-lastlook} & Contraintes de liquidité et modalités de rejet. & Documenter la profondeur, le financement et la validité des demandes.\\
+\bottomrule
+\end{tabularx}
+\caption{Antécédents et rôle précis des outils. L'intégration au projet et les comparaisons numériques sont réalisées ici ; une nouveauté théorique générale n'est pas déduite de cette intégration.}
+\end{table}
+
+L'apport vérifiable de cette version est un ensemble cohérent de formulations, de preuves, de logiciels et de comparaisons : capacités exprimées dans les bonnes unités, enveloppe tenant compte des compensations, sélection statistique, simulateur monétaire et traitement de réseaux variables. Une publication originale demanderait encore une confrontation approfondie aux méthodes spécialisées et la validation sur les nouvelles données. Aucun résultat de ce complément ne préjuge de la présence d'arbitrages sur cette future période.
+
+\section{Espace-temps, liquidité et autofinancement}
+\label{sec:ext-cash}
+
+\subsection{Sommets, information et chemins admissibles}
+
+Un sommet est un état \(v=(i,\nu,t)\), composé d'une devise \(i\), d'un compte ou lieu \(\nu\) et d'un instant \(t\). Un lien peut être une conversion, une détention ou un transfert autorisé. Les liens temporels vont vers le futur. Une boucle de devises exécutée en plusieurs étapes est donc un chemin de \((i,\nu,t)\) vers \((i,\nu,T)\), et non un cycle orienté qui remonterait le temps.
+
+On la compare à un chemin de référence \(Q\) entre les mêmes extrémités : détention, ou remboursement d'un financement admis. La différence formelle \(c=P-Q\) est une chaîne fermée. Si \(B\) est la matrice d'incidence sommet--arête, avec \(-1\) à la source et \(+1\) à l'arrivée, alors
+\begin{equation}
+ Bc=0,\qquad G(P,Q)=c^{\mathsf T}a.
+ \label{eq:ext-chain}
+\end{equation}
+Le signe négatif des liens de \(Q\) sert à la comparaison algébrique ; il n'autorise pas leur négociation à rebours.
+
+La décision utilise l'information reçue, notée \(\mathcal F_t^{\rm obs}\). L'heure de production d'une cotation et son heure de réception ne sont pas interchangeables. Une politique est admissible si ses ordres sont mesurables par rapport à cette information et respectent les soldes et crédits annoncés. Les prix futurs ne servent qu'à construire les labels de calibration ou d'évaluation, jamais à décider rétroactivement.
+
+\subsection{Transport monétaire avec profondeur}
+
+Pour un lien \(e:u\to v\), soit \(F_e(x)\) le montant net reçu en \(v\) contre \(x\) unités de \(u\). La fonction inclut les frais de cette conversion. Une courbe de carnet donne, par exemple,
+\begin{equation}
+ F_e(x)=\sum_{\ell}r_{e\ell}x_{e\ell},\qquad
+ 0\le x_{e\ell}\le d_{e\ell},\qquad \sum_\ell x_{e\ell}=x,
+ \label{eq:ext-depth}
+\end{equation}
+où les tranches sont consommées dans l'ordre des prix disponibles. Les \(d_{e\ell}\) sont des capacités dans la devise vendue. Si une paire base/quote est cotée avec une taille ask \(d\) exprimée en base, la capacité de l'arête inverse, en quote, vaut \(A d\), et non \(d\).
+
+Une connexion sur un fibré en droites décrit le transport \emph{linéaire} d'une tranche à taux fixé, \(F_e(x)=r_ex\). Lorsque le taux dépend du montant, le transport total est une application monotone, généralement non linéaire. Il serait incorrect de le présenter comme une unique connexion linéaire indépendante du volume. Le changement d'unités reste cependant bien défini.
+
+Pour un chemin \(P=(e_1,\ldots,e_L)\), les soldes satisfont \(x_0=q\), \(x_k=F_{e_k}(x_{k-1})\). Avec une référence \(F_Q(q)\), le résultat monétaire est
+\begin{equation}
+ \Pi(P,Q;q)=F_P(q)-F_Q(q).
+ \label{eq:ext-pnl}
+\end{equation}
+Un P\&L complet n'est annoncé que lorsque les positions résiduelles ont été fermées ou explicitement valorisées selon une règle distincte. Un solde en EUR n'est pas traité silencieusement comme un gain réalisé en USD.
+
+\begin{proposition}[Covariance monétaire et invariance du résultat relatif]
+Soit \(g_v>0\) un changement d'unités à chaque sommet. Les bonnes transformations sont
+\begin{equation}
+ x'_v=g_vx_v,\quad d'_e=g_ud_e,\quad
+ F'_e(x')=g_vF_e(x'/g_u),\qquad e:u\to v.
+ \label{eq:ext-money-gauge}
+\end{equation}
+Pour deux chemins de même source \(o\) et de même arrivée \(z\),
+\[
+ \Pi'(P,Q;g_oq)=g_z\Pi(P,Q;q).
+\]
+Le signe du résultat et le rapport \(F_P(q)/F_Q(q)\), lorsque le dénominateur est positif, sont invariants.
+\end{proposition}
+\begin{proof}
+Si \(x'_{k-1}=g_{u}x_{k-1}\), la définition donne \(F'_e(x'_{k-1})=g_vF_e(x_{k-1})\). L'identité se propage par récurrence le long de chaque chemin. Les deux montants terminaux sont multipliés par le même \(g_z\). Les contraintes de capacité sont conservées puisque \(x'_{k-1}\le d'_e\) équivaut à \(x_{k-1}\le d_e\). La différence et le rapport ont les propriétés annoncées. Pour un transport linéaire, cette formule redonne \(a'_e=a_e+\log g_v-\log g_u\), avec la conversion éventuelle en pb.
+\end{proof}
+
+Transformer seulement les prix tout en laissant les tailles inchangées violerait cette propriété. Les liens de détention doivent eux aussi recevoir la transformation temporelle de la section 11.5.
+
+\subsection{Un certificat déterministe avec montants réservés}
+
+Une fourchette statistique sur les prix ne garantit pas le remplissage d'un ordre. Le résultat suivant suppose explicitement des engagements de liquidité valides jusqu'aux échéances des liens. Il peut servir de référence contractuelle ou de scénario contrôlé ; les archives actuelles ne permettent pas de vérifier ces engagements.
+
+\begin{proposition}[Propagation de bornes et réservation de liquidité]
+Pour chaque lien \(e_k\), supposons que toute conversion admissible soit entièrement exécutée avant son échéance et que, pour les montants considérés,
+\[
+ \ell_k(x)\le F_{e_k}(x)\le u_k(x),\qquad
+ d_{e_k}^{\rm disponible}\ge \underline d_k,
+\]
+où \(\ell_k,u_k\) sont croissantes. Posons
+\begin{equation}
+ L_0=U_0=q,\qquad L_k=\ell_k(L_{k-1}),\quad U_k=u_k(U_{k-1}).
+ \label{eq:ext-interval-propagation}
+\end{equation}
+Si \(U_{k-1}\le\underline d_k\) pour tout \(k\) et si \(F_Q(q)\le\overline Q(q)\), alors
+\begin{equation}
+ \Pi(P,Q;q)\ge L_L-\overline Q(q).
+ \label{eq:ext-reserved}
+\end{equation}
+Une borne strictement positive certifie un excédent pour tous les transports et capacités compatibles avec ces hypothèses.
+\end{proposition}
+\begin{proof}
+Supposons \(L_{k-1}\le x_{k-1}\le U_{k-1}\). La borne supérieure sur le solde assure \(x_{k-1}\le\underline d_k\), donc la capacité réservée suffit au montant effectivement présenté. L'hypothèse de remplissage permet d'appliquer la conversion. Par croissance,
+\(\ell_k(L_{k-1})\le\ell_k(x_{k-1})\le F_{e_k}(x_{k-1})\le u_k(x_{k-1})\le u_k(U_{k-1})\).
+La récurrence part de \(L_0=x_0=U_0=q\). À l'arrivée, \(x_L\ge L_L\) et le remboursement ou la détention de référence est majoré par \(\overline Q(q)\), d'où la différence annoncée.
+\end{proof}
+
+La capacité doit être comparée à \(U_{k-1}\), pas seulement à \(L_{k-1}\). Si un premier change transforme 10 unités en un montant compris entre 10 et 20, une capacité de 15 au change suivant ne suffit pas à garantir la conversion complète. Ce cas est inclus dans les tests du logiciel.
+
+L'hypothèse de réservation de toute la route est plus forte qu'un ordre FOK sur chaque jambe. Le rejet de la troisième jambe peut suivre le remplissage des deux premières. Sans engagement global, il faut représenter les branches de rejet et de remplissage partiel, puis la liquidation des positions restantes. Le simulateur fait cette distinction.
+
+\subsection{Programme de flux et certificat dual}
+
+Sur un réseau temporel fini, une tranche de conversion a un taux net connu \(r_e>0\), une capacité finie \(d_e\) et un montant source \(x_e\). Soit \(A\) la matrice monétaire dont la colonne \(e:u\to v\) vaut \(-1\) en \(u\), \(r_e\) en \(v\). Cette matrice diffère de l'incidence topologique \(B\) de (\ref{eq:ext-chain}). Le cash initial est \(b=q\mathbf e_o\). Les contraintes d'autofinancement sont
+\begin{equation}
+ b+Ax\ge0,\qquad 0\le x_e\le d_e.
+ \label{eq:ext-generalized-flow}
+\end{equation}
+Les détentions et transferts sont des liens explicites. L'objectif est le cash terminal dans la devise de financement, diminué du remboursement. Les inventaires restants sont non négatifs ; exiger leur fermeture complète demande d'ajouter les conversions de liquidation correspondantes.
+
+\begin{proposition}[Borne duale finie]
+Supposons que le sommet terminal \(z\) n'ait pas de lien sortant. Si \(p_v\ge0\), \(p_z=1\), \(s_e\ge0\) vérifient
+\begin{equation}
+ p_u-r_ep_v+s_e\ge0\quad(e:u\to v),
+ \label{eq:ext-dual-constraints}
+\end{equation}
+alors toute solution de (\ref{eq:ext-generalized-flow}) vérifie
+\begin{equation}
+ (b+Ax)_z\le qp_o+\sum_e d_es_e.
+ \label{eq:ext-flow-dual}
+\end{equation}
+Dans le problème linéaire fini réalisable et borné, le minimum de cette borne égale le maximum du cash terminal. Les termes \(s_e\) sont les prix duaux des capacités.
+\end{proposition}
+\begin{proof}
+Les soldes sont non négatifs et \(p_z=1\), donc \((b+Ax)_z\le p^{\mathsf T}(b+Ax)\). D'autre part,
+\[
+ p^{\mathsf T}(b+Ax)=qp_o+\sum_{e:u\to v}(r_ep_v-p_u)x_e
+ \le qp_o+\sum_es_ex_e\le qp_o+\sum_es_ed_e.
+\]
+Pour l'égalité optimale, écrivons l'objectif \(A_zx+b_z\), les contraintes \(-Ax\le b\) et \(x\le d\). La dualité linéaire donne des multiplicateurs non négatifs. En ajoutant la valeur terminale unitaire au multiplicateur de solde, on obtient (\ref{eq:ext-dual-constraints}) avec \(p_z\ge1\). Comme le terminal n'a pas de sortie, ramener \(p_z\) à 1 ne resserre aucune contrainte entrante et ne change pas \(qp_o\). La forme annoncée est donc atteinte. La réalisabilité et les capacités finies assurent les conditions usuelles de dualité du programme considéré.
+\end{proof}
+
+Il s'agit d'un programme de flux généralisés à paramètres fixés, pas d'une politique autorisée à connaître les prix futurs. Le calcul sur un scénario connu sert de comparateur. Une application prospective doit fournir des tranches réservées ou des bornes valides avant la décision. La présence de contraintes de capacité ne constitue pas, à elle seule, un résultat théorique inédit.
+
+\section{Incertitudes corrélées sur les transports}
+\label{sec:ext-support}
+
+\subsection{Support exact d'un ensemble structuré}
+
+Dans ce paragraphe, les transports sont logarithmiques sur des tranches fixées. Les poids \(a\) et les perturbations sont exprimés dans la même unité, par exemple en pb log. Pour \(c=P-Q\), supposons
+\begin{equation}
+ a^*=a+B^{\mathsf T}\phi+Uz+\varepsilon,
+ \qquad \lVert z\rVert_2\le1,\quad |\varepsilon_e|\le r_e.
+ \label{eq:ext-factor-set}
+\end{equation}
+La formule porte sur un trajet fixé. Le code ne résout pas une optimisation robuste globale sur tous les cycles : ne trouver aucun candidat certifié ne démontre pas l'absence globale d'arbitrage robuste.
+
+Le potentiel \(\phi\) peut varier librement. \(U\) et \(r\) décrivent, eux, un ensemble borné de perturbations. Dans une application empirique, les estimer ne rend pas automatiquement cet ensemble valide sur les données futures.
+
+\begin{proposition}[Rayon conjoint sur un chemin fermé formel]
+Si \(Bc=0\), le gain minimal dans (\ref{eq:ext-factor-set}) est exactement
+\begin{equation}
+ \inf c^{\mathsf T}a^*=c^{\mathsf T}a-
+ho(c),\qquad
+ \rho(c)=\lVert U^{\mathsf T}c\rVert_2+\sum_e r_e|c_e|.
+ \label{eq:ext-support}
+\end{equation}
+Le minimum est atteint. Pour une boîte traitant séparément les composantes de \(Uz+\varepsilon\),
+\begin{equation}
+ \rho(c)\le\rho_{\rm boite}(c)
+ :=\sum_e|c_e|\bigl(\lVert U_{e,:}\rVert_2+r_e\bigr).
+ \label{eq:ext-box}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Le terme de potentiel disparaît puisque \(c^{\mathsf T}B^{\mathsf T}\phi=(Bc)^{\mathsf T}\phi=0\). Le minimum de \((U^{\mathsf T}c)^{\mathsf T}z\) sur la boule unité vaut \(-\lVert U^{\mathsf T}c\rVert_2\), atteint par le vecteur opposé normalisé, ou par n'importe quel \(z\) si ce vecteur est nul. Chaque composante indépendante du reste est minimisée par \(\varepsilon_e=-r_e\operatorname{sgn}(c_e)\). Ces choix sont simultanément admissibles parce que l'ensemble est le produit de la boule et de la boîte. Enfin, l'inégalité triangulaire donne \(\lVert\sum_ec_eU_{e,:}\rVert_2\le\sum_e|c_e|\lVert U_{e,:}\rVert_2\).
+\end{proof}
+
+Cette formule est une application de la fonction de support d'un ensemble robuste \cite{ext-robust}. Son intérêt ici est de conserver exactement les compensations compatibles avec le chemin et la référence. Sur un trajet temporel, oublier les liens de détention peut détruire \(Bc=0\) et invalider l'annulation. Avec un impact dépendant du volume, on revient à la propagation monétaire de la section \ref{sec:ext-cash}, ou à des tranches dont les montants sont effectivement contrôlés.
+
+L'annulation d'un potentiel dans le gain logarithmique ne borne pas les montants intermédiaires. Si \(B^{\mathsf T}\phi\) représente un choc physique de prix à unités fixes, les contraintes de capacité exigent aussi des bornes sur ces montants. S'il représente un changement d'unités, les tailles doivent être transformées selon (\ref{eq:ext-money-gauge}). L'expérience 4 utilise des facteurs physiques bornés ; ses contrôles de jauge transforment également les quantités.
+
+\subsection{Un comparateur qui retire lui aussi le potentiel}
+
+Comparer seulement (\ref{eq:ext-support}) à une boîte brute pourrait attribuer au nouvel ensemble un avantage provenant simplement du retrait d'une forme exacte. On ajoute donc la projection orthogonale sur l'espace des cycles
+\begin{equation}
+ H=I-B^{\mathsf T}(BB^{\mathsf T})^+B,\qquad Hc=c,
+ \label{eq:ext-projector}
+\end{equation}
+où \(\cdot^+\) est la pseudo-inverse. Une boîte après projection a le rayon valide
+\begin{equation}
+ \rho_{\rm proj}(c)=\sum_e |c_e|
+ \left(\lVert(HU)_{e,:}\rVert_2+\sum_f|H_{ef}|r_f\right).
+ \label{eq:ext-projbox}
+\end{equation}
+La formule \(Hc=c\), suivie de l'inégalité triangulaire, montre \(\rho(c)\le\rho_{\rm proj}(c)\). En dimension cyclique un, ce comparateur peut déjà atteindre la borne exacte. L'expérience 4 utilise un espace cyclique de dimension trois et rapporte les trois méthodes. Elle ne présente donc pas tout le gain contre la boîte brute comme un bénéfice supplémentaire au-delà de la projection de Hodge.
+
+La quantité \(c^{\mathsf T}a-\rho(c)>0\) est un certificat \emph{conditionnel à l'ensemble}. Pour en déduire un résultat exécuté, il faut encore satisfaire les conditions de remplissage, de capacité et de financement. Une enveloppe correcte sur les prix n'interdit ni le rejet d'un ordre ni une liquidation coûteuse.
+
+\section{Calibration par blocs et contrôle après sélection}
+\label{sec:ext-inference}
+
+\subsection{Une unité statistique qui contient la dépendance interne}
+
+Notons \(Z_d\) un bloc : journée de marché ou épisode indépendant dans le simulateur. Une famille d'actions \(\mathcal I_d\) est produite par une règle figée avant la calibration, à partir des informations causales du bloc. Elle peut contenir plusieurs heures, cycles et délais. Pour chaque action \(i\), on dispose d'une prédiction \(\widehat Y_{di}\), d'un résultat \(Y_{di}\) et d'une échelle \(w_{di}>0\), elle aussi déterminée sans les labels de calibration. Le résultat peut être un gain de prix ou un P\&L cash complet, mais le choix doit rester identique dans toutes les phases.
+
+Le score unilatéral d'un bloc est
+\begin{equation}
+ S_d=\max\left(0,\sup_{i\in\mathcal I_d}
+       \frac{\widehat Y_{di}-Y_{di}}{w_{di}}\right).
+ \label{eq:ext-block-score}
+\end{equation}
+Toute dépendance entre ticks, actions et devises \emph{à l'intérieur} du bloc est autorisée par cette définition. Elle ne prouve pas l'échangeabilité entre les journées. La saisonnalité, les annonces, les changements de fournisseur ou de liquidité peuvent la mettre en défaut.
+
+La famille doit contenir les actions que la règle pourrait ensuite sélectionner. Une politique qui modifie ses ordres futurs en fonction d'un remplissage doit être évaluée avec ce même retour d'information. Les labels d'actions hypothétiques évaluées à des soldes de départ fixes ne garantissent pas une politique adaptative qui réutilise différemment sa liquidité. Le simulateur de l'expérience 6 évite cette ambiguïté : un épisode indépendant n'autorise qu'une tentative parmi une famille de routes fixée.
+
+\begin{proposition}[Enveloppe conforme simultanée et sélection dans le bloc]
+Conditionnellement à l'entraînement, supposons \(S_1,\ldots,S_m,S_{m+1}\) échangeables. Pour \(0<\alpha<1\), posons
+\begin{equation}
+ k=\left\lceil(m+1)(1-\alpha)\right\rceil,\qquad
+ q_\alpha=\begin{cases}S_{(k)},&k\le m,\\+\infty,&k=m+1.\end{cases}
+ \label{eq:ext-rank}
+\end{equation}
+Alors
+\begin{equation}
+ \Prob\!\left(\forall i\in\mathcal I_{m+1},\quad
+ Y_{m+1,i}\ge\widehat Y_{m+1,i}-q_\alpha w_{m+1,i}\right)\ge1-\alpha.
+ \label{eq:ext-coverage}
+\end{equation}
+Une sélection quelconque dans cette famille, même fondée sur les bornes calculées, vérifie donc
+\begin{equation}
+ \Prob\bigl(\exists\hbox{ action acceptée avec borne positive et }Y\le0\bigr)\le\alpha.
+ \label{eq:ext-false-accept}
+\end{equation}
+\end{proposition}
+\begin{proof}
+Si \(k=m+1\), la borne est infinie et l'événement de couverture est certain. Sinon, on ordonne les \(m+1\) scores, en départageant d'éventuels ex aequo aléatoirement. Par échangeabilité, le rang du dernier score est uniforme sur \(1,\ldots,m+1\). Il dépasse \(k\) avec probabilité \((m+1-k)/(m+1)\le\alpha\). Sans départage, les égalités ne peuvent qu'améliorer la couverture avec l'inégalité large. L'événement \(S_{m+1}\le q_\alpha\) donne simultanément toutes les bornes par définition du supremum. Sur cet événement, une borne strictement positive ne peut correspondre à \(Y\le0\), quelle que soit la sélection dans la famille.
+\end{proof}
+
+La garantie est marginale sur le nouveau bloc et la calibration, sous les hypothèses annoncées \cite{ext-lei}. Elle n'affirme pas que 95\,\% des opérations \emph{acceptées} réussiront, ni que la garantie est vérifiée pour chaque calibration fixée.
+
+\subsection{Résolution statistique et horizon de contrôle}
+
+Une borne finie exige \(k\le m\), soit
+\begin{equation}
+ m\ge\left\lceil\alpha^{-1}-1\right\rceil.
+ \label{eq:ext-minimum-m}
+\end{equation}
+Les cinq fenêtres de juin ne peuvent donc pas fournir une borne conforme finie au niveau 99\,\% avec une fenêtre comme unité. Le rayon serait \(+\infty\). Les couvertures des sections 8 et 10 restent des fréquences descriptives ; elles ne sont pas requalifiées rétrospectivement en garanties de ce type.
+
+Il faut au moins 19 blocs pour 95\,\% et 99 blocs pour 99\,\%. Ce sont des minima de résolution du rang, pas des recommandations de taille assurant une bonne précision. Si l'on souhaite contrôler l'existence d'une fausse acceptation sur plusieurs blocs futurs, des bornes \(\alpha_d\) valides pour chaque bloc donnent, par union,
+\[
+ \Prob(\hbox{au moins une fausse acceptation sur }D\hbox{ blocs})\le\sum_{d=1}^D\alpha_d.
+\]
+L'indépendance des événements futurs n'est pas nécessaire à cette inégalité. En revanche, les bornes individuelles doivent effectivement être valides. Pour 250 journées et un budget total de 5\,\%, une allocation uniforme donne \(\alpha_d=0{,}0002\) et demanderait au moins 4\,999 blocs pour un quantile de rang fini. Une garantie annuelle ne suit donc pas d'une couverture quotidienne de 99\,\%.
+
+\subsection{Pourquoi le conditionnement sur l'acceptation change la question}
+
+Soit \(A\) l'événement d'acceptation. De \(\Prob(A\cap\{Y\le0\})\le\alpha\), on obtient seulement
+\begin{equation}
+ \Prob(Y\le0\mid A)\le\min\left(1,\frac{\alpha}{\Prob(A)}\right)
+ \label{eq:ext-selection-gap}
+\end{equation}
+lorsque \(\Prob(A)>0\). Une règle très rare peut donc avoir une mauvaise précision conditionnelle malgré une bonne borne marginale.
+
+Un contre-exemple suffit : sur une région de probabilité 5\,\%, le modèle annonce un gain positif mais le résultat est négatif ; ailleurs il n'agit pas et sa borne est exacte. La couverture marginale vaut 95\,\%, mais 100\,\% des acceptations échouent. Cet exemple est également simulé dans l'expérience 5. Il interdit de présenter la seule proposition précédente comme une garantie de taux de réussite parmi les transactions.
+
+\subsection{Une borne sur les pertes parmi les décisions acceptées}
+
+On fixe, indépendamment des labels de calibration, une famille finie de politiques \(\pi_1,\ldots,\pi_K\). Pour la politique \(j\), \(A_j(Z)\) indique une acceptation dans un bloc et \(L_j(Z)\in\{0,1\}\) indique une perte \emph{si elle accepte}. Le risque étudié est
+\begin{equation}
+ R_j=\Prob(L_j=1\mid A_j=1).
+ \label{eq:ext-conditional-risk}
+\end{equation}
+Dans un épisode du simulateur, la perte signifie \(\Pi<0\). Sur des journées contenant plusieurs tentatives, le validateur fourni utilise un autre événement explicite : \emph{au moins une perte pendant la journée traitée}. Il n'assimile pas des ticks ou tentatives corrélés à des essais binomiaux indépendants.
+
+\begin{proposition}[Validation simultanée d'une famille figée]
+Supposons les blocs de calibration indépendants et de même loi, et les politiques fixées conditionnellement à l'entraînement. Soient \(N_j\) les blocs acceptés et \(K_j\) les blocs perdants parmi eux. Pour \(0<\delta<1\), définissons
+\begin{equation}
+ U_j=\begin{cases}
+ 1,&N_j=0\text{ ou }K_j=N_j,\\
+ Q_{\mathrm{Beta}(K_j+1,N_j-K_j)}(1-\delta/K),&\text{sinon}.
+ \end{cases}
+ \label{eq:ext-binomial-upper}
+\end{equation}
+Alors
+\begin{equation}
+ \Prob_{\rm calibration}\!\left(\forall j,\ R_j\le U_j\right)\ge1-\delta.
+ \label{eq:ext-risk-confidence}
+\end{equation}
+Toute politique choisie parmi celles ayant \(U_j\le\alpha\) a un risque conditionnel au plus \(\alpha\), sur cet événement de confiance. En l'absence d'une telle politique, la décision est l'abstention.
+\end{proposition}
+\begin{proof}
+Pour une politique fixée et conditionnellement à \(N_j=n\), les labels acceptés proviennent de blocs indépendants ayant la loi du bloc conditionnée par \(A_j=1\). Le nombre de pertes suit donc \(\mathrm{Bin}(n,R_j)\). L'inversion unilatérale de cette loi donne \(\Prob(R_j>U_j\mid N_j=n)\le\delta/K\), avec une borne triviale égale à 1 pour \(n=0\). Cette inégalité se conserve après moyenne sur \(N_j\). L'union sur les \(K\) politiques donne (\ref{eq:ext-risk-confidence}) sans supposer leurs résultats indépendants. Sur l'événement simultané, toute politique retenue vérifie \(R_j\le U_j\le\alpha\), même si le choix final maximise un critère de calibration. Cette liberté ne s'étend pas à l'invention d'une nouvelle politique après examen des labels.
+\end{proof}
+
+Cette construction relève de la validation par tests multiples et du principe \emph{Learn then Test} \cite{ext-ltt}. Elle est plus exigeante que le simple seuil d'un quantile de prix, et sa garantie est différente : confiance sur un risque conditionnel, plutôt que couverture marginale d'un résultat futur. Les hypothèses et cibles sont données séparément dans les tableaux.
+
+Avec zéro perte sur \(n\) acceptations, \(U=1-(\delta/K)^{1/n}\). Pour \(K=8\), \(\delta=5\,\%\), il faut au moins 99 acceptations indépendantes pour valider un risque de 5\,\%, et 505 pour un risque de 1\,\%. Les journées sans acceptation n'augmentent pas ces effectifs informatifs. Une période longue est donc utile, mais ne remplace ni l'indépendance adéquate ni des labels d'exécution connus.
+
+Sur des journaux réels, les résultats de routes ou politiques non exécutées ne sont pas observés. Les traiter comme des gains nuls serait une erreur. Il faut soit valider une politique effectivement suivie sur des blocs indépendants appropriés, soit une collecte expérimentale permettant de comparer les politiques. Les contrefactuels du rejeu restent des résultats du modèle d'exécution choisi.
+
+\subsection{Fréquence des pertes et espérance monétaire}
+
+Une borne de fréquence ne borne pas la taille des pertes. Si une règle assure plutôt \(\Prob(\Pi<g\mid A)\le\alpha\), avec un objectif \(g>0\) et une perte maximale certaine \(\Pi\ge-M\), alors
+\begin{equation}
+ \Esp[\Pi\mid A]\ge(1-\alpha)g-\alpha M.
+ \label{eq:ext-expectation}
+\end{equation}
+La preuve découpe l'espérance selon \(\Pi\ge g\) et son complément, puis utilise les bornes \(g\) et \(-M\). Le résultat est positif seulement si \(g>\alpha M/(1-\alpha)\). La validation des pertes de l'expérience 6 ne fournit pas automatiquement cette garantie : elle contrôle \(\Pi<0\), pas un gain minimal positif. Les moyennes de P\&L y sont donc estimées séparément sur le test.
+
+\subsection{Adaptation en ligne : une garantie de fréquence distincte}
+
+Un comparateur ACI élémentaire \cite{ext-aci} choisit le quantile passé au niveau \(1-\beta_d\), observe le score du bloc complet, puis actualise
+\begin{equation}
+ E_d=\mathbf1\{S_d>q_d\},\qquad
+ \beta_{d+1}=\beta_d+\gamma(\alpha-E_d).
+ \label{eq:ext-aci}
+\end{equation}
+Pour préserver les conventions aux extrémités, on pose \(q_d=+\infty\) si \(\beta_d\le0\), et \(q_d=-\infty\) si \(\beta_d\ge1\). Un intervalle infini ou vide déclenche une abstention financière, pas une certification fictive.
+
+\begin{proposition}[Identité d'erreur d'ACI avec labels mûris]
+Pour \(T\) mises à jour séquentielles complètes,
+\begin{equation}
+ \frac1T\sum_{d=1}^TE_d-\alpha
+ =\frac{\beta_1-\beta_{T+1}}{\gamma T}.
+ \label{eq:ext-aci-identity}
+\end{equation}
+Si \(\beta_1\in[0,1]\) et les scores sont finis, la convention précédente maintient
+\(\beta_d\in[-\gamma(1-\alpha),1+\gamma\alpha]\).
+\end{proposition}
+\begin{proof}
+La somme des actualisations (\ref{eq:ext-aci}) télescope et donne l'identité. Dans \([0,1]\), une étape varie d'au plus \(\gamma(1-\alpha)\) vers le bas ou \(\gamma\alpha\) vers le haut. En dessous de 0, la borne infinie impose \(E_d=0\) et le niveau remonte de \(\gamma\alpha\). Au-dessus de 1, la borne \(-\infty\) impose \(E_d=1\) et le niveau descend de \(\gamma(1-\alpha)\). L'intervalle annoncé est donc invariant par récurrence.
+\end{proof}
+
+Ce contrôle de fréquence à long terme ne donne pas une probabilité conditionnelle de perte à chaque date. Le code attend le label de chaque bloc avant son actualisation. Il ne revendique pas la même borne lorsque des milliers de labels d'ordres restent en attente. Des méthodes plus avancées d'adaptation aux ruptures existent \cite{ext-aci-new} ; le comparateur présenté est la règle élémentaire explicitement prouvée ici.
+
+\clearpage
+\section{Expérience 4 : bornes jointes, projection et capacités}
+\label{sec:ext-exp-four}
+
+\subsection{Protocole contrôlé}
+
+L'objectif est d'isoler la largeur des certificats, sans prétendre estimer une distribution d'erreurs de marché. Le graphe a quatre sommets et six liens : \((0,1),(1,2),(2,3),(0,3),(0,2),(1,3)\). Le chemin \(P=(0,1,2,3)\) est comparé au lien de référence \(Q=(0,3)\), donc \(c=(1,1,1,-1,0,0)\) et \(Bc=0\). L'espace des cycles du graphe a dimension trois.
+
+Pour chacun des 2\,000 cas, la matrice d'incertitude est
+\[
+ U=B^{\mathsf T}V+E,\qquad V_{ij}\sim\mathcal N(0,0{,}5^2),\quad
+ E_{ij}\sim\mathcal N(0,0{,}025^2),
+\]
+avec deux facteurs. Les bornes résiduelles sont uniformes entre 0,015 et 0,04 pb log. Le gain nominal total est uniforme entre \(-0{,}1\) et 0,85 pb log. Ces paramètres constituent un banc d'essai de la géométrie des ensembles, pas un ajustement aux cotations HistData.
+
+La capacité de chaque jambe est exprimée en devise source. On calcule les soldes supérieurs à partir des projections marginales de l'ensemble, puis fixe les planchers de taille à 105\,\% de ces soldes. Dans environ 15\,\% des cas, le plancher de la deuxième jambe est abaissé à 80\,\%, de façon à tester une insuffisance réelle au critère \(U_{k-1}\le\underline d_k\). Le logiciel vérifie la propagation, sans se contenter d'un indicateur de taille arbitraire.
+
+Trois méthodes utilisent le même ensemble de perturbations et le même filtre de capacité : boîte brute, boîte après projection de Hodge, fonction de support conjointe exacte. Pour chaque cas, 128 chocs admissibles sont simulés, soit 256\,000 vérifications. La preuve de la section \ref{sec:ext-support}, et non ce seul échantillonnage, justifie le certificat sur tout l'ensemble.
+
+\subsection{Résultats et analyse}
+
+\begin{table}[H]\centering\small
+\input{results/extension/table_extension_bornes.tex}
+\caption{Expérience 4. Même famille de 2\,000 cas et mêmes contraintes de capacité. Les rayons sont des bornes sur le gain logarithmique total.}
+\label{tab:ext-bounds}
+\end{table}
+
+La fonction de support accepte \ExtFactorAccept{} cas, contre \ExtProjectedAccept{} après projection et aucun avec la boîte brute. Le critère de capacité exclut \ExtCapacityReject{} cas. Le rapport médian des rayons est \ExtBoxRatio{} entre boîte brute et support exact ; il n'est plus que \ExtProjectedRatio{} entre boîte projetée et support exact. Une grande partie du premier gain vient donc bien du retrait de la composante de potentiel. La comparaison plus forte conserve un avantage mesurable dans ce réseau à plusieurs cycles, dû aux dépendances que la seconde boîte perd encore.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{extension_bornes.pdf}
+\caption{Bornes conjointes dans un ensemble connu. Le panneau A compare les distributions des rayons ; le panneau B compte les acceptations après le même contrôle de capacité. Les 128 chocs par cas ne produisent aucune violation de la borne analytique.}
+\label{fig:ext-bounds}
+\end{figure}
+
+L'absence de violation simulée n'est ni une preuve de calibration sur le marché ni une validation de l'ensemble choisi. Le scénario est construit pour contenir des variations communes importantes ; il démontre le mécanisme de compensation et permet de vérifier les implémentations. Un autre ensemble, presque indépendant par arête, pourrait réduire fortement cet avantage.
+
+Cent petits programmes de flux financés complètent le contrôle. Les taux sont perturbés entre \(-0{,}4\) et 0,7 pb, les tailles de la route varient entre 30\,\% et 120\,\% du capital source de référence, et une détention directe au taux 1 est disponible. L'écart primal--dual maximal est inférieur à \(1{,}5\times10^{-11}\) unité monétaire ; le changement simultané des unités de prix, quantités et financement modifie le profit normalisé de moins de \(4\times10^{-11}\). Ces tests valident les conventions et la dualité du problème fini, sans apporter une information sur le profit réel des données historiques.
+
+\clearpage
+\section{Expérience 5 : sélection, blocs dépendants et rupture}
+\label{sec:ext-exp-five}
+
+\subsection{Génération et séparation des échantillons}
+
+Cette expérience vise les garanties statistiques. Elle génère des panneaux d'erreurs de prédiction, et non des transactions Forex. Un bloc contient 32 instants et 24 actions. Un facteur commun suit une dynamique AR(1) de coefficient 0,85 à l'intérieur du bloc ; les blocs sont tirés indépendamment. Les actions ont des échelles d'erreur allant de 0,15 à 0,65 pb. Des composantes idiosyncratiques et des charges de signes opposés créent une dépendance entre actions.
+
+Le résultat cible vaut \(-0{,}20\) pb pour les actions ordinaires. Dans la moitié des blocs, une action tirée au hasard a un résultat positif de 2 pb aux 32 instants. La prédiction est ce résultat cible augmenté de l'erreur. Cette construction donne à la fois des contre-exemples et des contrôles positifs connus ; elle ne prétend pas reproduire la dynamique d'un carnet FX.
+
+Quatre-vingts blocs d'entraînement fixent les échelles de normalisation ; 199 blocs distincts calibrent les bornes ; 400 nouveaux blocs testent chaque régime. Aucune échelle n'est réestimée à partir des labels de test. Les quatre comparateurs sont : quantile marginal par observation, borne de bloc pour une action fixée, maximum conjoint de bloc, maximum conjoint normalisé par action. Seules les deux dernières méthodes couvrent par construction toute la famille et tous les instants du bloc au niveau nominal de 95\,\% sous les hypothèses.
+
+À chaque instant, on choisit l'action dont la borne inférieure est la plus élevée, puis on accepte si cette borne est positive. Une acceptation erronée a ici un résultat cible non positif. Les 12\,800 instants du test sont regroupés en 400 unités indépendantes pour les statistiques par bloc ; les ticks internes ne sont pas utilisés comme des répétitions indépendantes.
+
+\subsection{Régime échangeable}
+
+\begin{table}[H]\centering\small
+\input{results/extension/table_extension_stable.tex}
+\caption{Expérience 5, régime échangeable. Le rayon moyen est en pb. « Bloc erroné » désigne un bloc avec au moins une acceptation erronée, et non une proportion conditionnelle de pertes par transaction. Les acceptations sont comptées sur les 12\,800 occasions.}
+\label{tab:ext-coverage-stable}
+\end{table}
+
+La méthode marginale couvre individuellement des observations mais ne couvre aucun bloc entier dans ce test. Plus de la moitié des blocs contiennent une acceptation erronée. La borne d'une action fixée améliore la situation, mais sa couverture globale de famille reste insuffisante. Les deux méthodes conjointes atteignent respectivement 98,00\,\% et 97,75\,\% de couverture de bloc dans cette réalisation. Les fréquences observées peuvent dépasser le niveau nominal ; la garantie porte sur la distribution de la calibration et du bloc suivant, pas sur l'égalité d'une fréquence finie à 95\,\%.
+
+La normalisation apprise permet ici davantage d'acceptations à un rayon moyen plus petit, avec le même objectif formel de couverture. On ne prétend pas égaliser exactement leurs risques réalisés : ils sont mesurés dans le tableau. Les détails par bloc, y compris les acceptations erronées, sont conservés dans \filepath{results/extension/exp5_blocks.csv}.
+
+\subsection{Rupture de volatilité}
+
+Le second régime multiplie les erreurs futures par 2,5, sans changer les bornes calibrées. L'échangeabilité calibration--test n'est alors plus satisfaite. Les couvertures chutent, y compris pour les méthodes ayant une garantie correcte dans le premier régime.
+
+\begin{table}[H]\centering\small
+\input{results/extension/table_extension_rupture.tex}
+\caption{Même calibration, volatilité future multipliée par 2,5. Ces résultats sont un test hors hypothèse, pas une contradiction du théorème conforme.}
+\end{table}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{extension_couverture.pdf}
+\caption{Couverture et sélection sur les panneaux synthétiques. Le contrôle d'un maximum de bloc traite la sélection dans la famille, mais ne protège pas automatiquement contre une rupture non modélisée de la distribution.}
+\label{fig:ext-coverage}
+\end{figure}
+
+Un contre-exemple supplémentaire de 100\,000 observations vérifie la distinction de (\ref{eq:ext-selection-gap}) : la borne populationnelle couvre environ 95\,\% des observations, tandis que toutes les acceptations de la région défavorable échouent. Ce calcul illustre une limite logique, pas une propriété nouvelle du marché FX.
+
+\subsection{Comparateur adaptatif}
+
+On enchaîne 1\,500 nouveaux blocs au régime initial, puis 1\,500 au régime de volatilité accrue. ACI utilise les 199 scores passés les plus récents, \(\alpha=0{,}05\) et \(\gamma=0{,}005\). Le score d'un bloc n'est incorporé qu'après observation de son label complet. La fréquence d'erreur globale est \ExtOnlineFixed{}\,\% pour la borne figée, contre \ExtOnlineAdaptive{}\,\% pour ACI. L'identité (\ref{eq:ext-aci-identity}) est vérifiée numériquement à moins de \(10^{-15}\).
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{extension_adaptation.pdf}
+\caption{Rupture au bloc 1\,500. Les erreurs du panneau inférieur sont des fréquences glissantes sur 200 blocs. Le contrôle à long terme n'empêche pas un dépassement transitoire après la rupture et ne garantit pas une précision conditionnelle parmi les acceptations.}
+\label{fig:ext-online}
+\end{figure}
+
+Cette expérience ne justifie pas d'appliquer directement ACI à des ordres dont les labels arrivent avec des délais variables et se chevauchent. Le module fourni utilise des blocs mûris. La collecte future permettra de mesurer les délais de maturation et de décider si cette unité est adaptée.
+
+\clearpage
+\section{Expérience 6 : prix, exécutions partielles et cash net}
+\label{sec:ext-exp-six}
+
+\subsection{Marché synthétique et contrôles positifs}
+
+Le simulateur contient six devises : USD, EUR, GBP, JPY, CHF et AUD. En dehors des impulsions contrôlées, les valeurs en USD suivent des martingales exponentielles positives, avec l'USD constant. Le pas du marché est de 10 ms. L'information du détecteur est asynchrone : les âges des paires ont une échelle de 100 ms, avec 500 ms ajoutés à la réception d'USD/EUR. Les dates d'observation sont antérieures à la décision.
+
+Chaque épisode appartient à l'un de trois scénarios tirés avec la même probabilité : contrôle nul sans désajustement, impulsion de 6 pb sur USD/EUR disparaissant 40 ms après la décision, ou impulsion de même amplitude durant 2 secondes. L'impulsion a commencé 1,2 seconde avant la décision. Les cotations synchrones respectent le bid--ask sur chaque paire ; l'impulsion introduit volontairement de véritables opportunités de prix entre paires dans les deux derniers scénarios.
+
+La demi-fourchette vaut 0,10 pb. Deux tranches de profondeur correspondent à 20\,000 et 180\,000 USD convertis dans la devise source, avec 0 et 0,08 pb de dégradation supplémentaire. Les frais ajoutés valent 0,02 pb par conversion. Les 6 pb de l'impulsion sont un contrôle positif volontairement net, très supérieur aux faibles marges historiques observées ; ils ne sont pas ajustés aux données de juillet.
+
+La famille de routes contient les cinq allers-retours USD--autre devise et les vingt triangles orientés commençant par USD, soit 25 candidats. Cette famille fixée est limitée à trois conversions. Elle sert à mesurer la sélection et les exécutions ; elle n'est pas présentée comme l'énumération de tous les cycles du graphe à six devises. La détection générale du logiciel utilise, séparément, Bellman--Ford et Karp sans cette limite de longueur.
+
+\subsection{Deux mécanismes d'exécution}
+
+Chaque tentative part de 100\,000 USD. La latence de chaque jambe est de 50 ms plus une composante uniforme entière entre 0 et 30 ms. Les mêmes tirages de latence sont utilisés pour les résultats de prix idéaux et pour l'exécution de la route correspondante.
+
+Dans le régime \emph{réservé}, les taux et tailles de toute la route sont engagés à la décision. Les délais demeurent, mais le trajet conserve ses taux réservés. Ce régime est une hypothèse forte du modèle : il ne correspond pas simplement à l'envoi simultané d'ordres sur un marché ordinaire.
+
+Dans le régime \emph{sans réservation}, chaque conversion utilise le carnet à son propre instant d'arrivée. Une probabilité de rejet de base de 1,5\,\% est relevée à 25\,\% lorsque la demande se fonde sur une variation défavorable de plus de 0,35 pb. Il s'agit d'un contrôle de validité stylisé, pas d'une estimation du last look d'une plateforme. Un remplissage partiel apparaît avec une probabilité de 4\,\%, et un stress supplémentaire de taille avec 4\,\%. Les quantités sont consommées par version de cotation. Si une jambe échoue, la route est interrompue et les positions restantes sont liquidées vers USD après 50 ms.
+
+Le modèle suppose que la liquidité directe de liquidation est suffisamment renouvelée au dernier niveau de prix. Il ne modélise pas la réponse stratégique des autres participants ni l'impact endogène au-delà des tranches consommées. Ces hypothèses favorisent la fermeture des positions ; elles sont explicites pour permettre leur remplacement par des journaux ou carnets futurs. Un épisode non fermé déclenche une erreur du calcul de P\&L réalisé dans ce banc d'essai.
+
+\subsection{Règles comparées et absence de fuite d'information}
+
+Les 199 épisodes de calibration sont distincts des 600 épisodes de test. Pour chaque route, les labels de calibration sont calculés comme résultats potentiels du simulateur avec les mêmes règles de frais et de remplissage. Les tirages propres à une route sont identiques entre les méthodes qui la choisissent. Il n'y a qu'une tentative par épisode, donc pas de consommation cachée de la même liquidité par plusieurs stratégies dans un même compte.
+
+Les méthodes sont :
+\begin{enumerate}
+\item nominale : choisir le meilleur rendement prédit et accepter s'il est positif ;
+\item filtre d'âge de 100 ms sur les seules arêtes de la route ;
+\item borne conforme conjointe sur les gains de prix, avant risque de quantité ou de rejet ;
+\item borne conforme conjointe sur le rendement cash complet, échecs et liquidation compris ;
+\item validation du risque conditionnel sur huit seuils figés \(0,0{,}5,1,2,3,4,6,8\) pb, avec \(\alpha=5\,\%\) et \(\delta=5\,\%\).
+\end{enumerate}
+Les bornes conformes utilisent \(\alpha=5\,\%\) et le rang corrigé. La dernière méthode vise une garantie différente, portant sur les pertes parmi les acceptations avec une confiance simultanée de 95\,\%. Les probabilités et coûts du simulateur sont fixés avant les calculs, sans ajustement au test.
+
+Pour la dernière méthode, toutes les bornes binomiales sont calculées, puis on choisit parmi les règles validées celle dont le résultat de calibration est le plus élevé. La correction sur huit règles autorise cette sélection. La mesure de sa rentabilité est ensuite faite uniquement sur le test indépendant.
+
+\subsection{Résultats avec réservation complète}
+
+\begin{table}[H]\centering\small
+\input{results/extension/table_extension_reserve.tex}
+\caption{Expérience 6, réservation de toute la route. Le gain moyen est un rendement simple en pb par occasion, incluant zéro en cas d'abstention. Les pertes sont des P\&L strictement négatifs. Chaque méthode voit les mêmes 600 épisodes.}
+\label{tab:ext-reserved}
+\end{table}
+
+La validation conditionnelle retient le seuil \ExtConditionalThreshold{} pb. Sa borne binomiale de calibration est \ExtConditionalUpper{}\,\%, sous l'objectif de 5\,\%. Sur le test, elle accepte \ExtReservedAccept{} occasions, avec \ExtReservedLoss{} perte et un gain moyen de \ExtReservedMean{} pb par occasion. Ce résultat valide la construction dans ce marché synthétique muni de réservations. Zéro perte observée ne signifie pas que la probabilité réelle de perte est mathématiquement nulle : la règle statistique et le certificat déterministe ne sont pas la même garantie.
+
+Le filtre de 100 ms ne voit presque pas les opportunités injectées sur USD/EUR, car cette paire a précisément un retard ajouté de 500 ms. Les pertes de ce comparateur sont donc une conséquence identifiable de la construction, pas une conclusion générale contre les filtres d'âge.
+
+\subsection{Résultats sans réservation}
+
+\begin{table}[H]\centering\small
+\input{results/extension/table_extension_ouvert.tex}
+\caption{Expérience 6, ordres séquentiels sans réservation. Un faible risque par occasion peut coexister avec une proportion élevée de pertes parmi les rares acceptations. « -- » signifie aucune tentative acceptée, et non un taux de perte nul sur des transactions.}
+\label{tab:ext-unreserved}
+\end{table}
+
+La règle nominale peut avoir une moyenne positive parce que le simulateur contient volontairement des impulsions durables et rentables. Elle reste exposée aux pertes. Les certificats conformes réduisent le nombre d'acceptations, mais leur garantie marginale n'est pas une promesse de faible risque conditionnel. L'ensemble de politiques testé ne contient ici aucune règle validable au risque conditionnel de 5\,\% : la procédure s'abstient. Ce résultat négatif n'est pas modifié pour faire apparaître artificiellement une stratégie certifiée.
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{extension_execution.pdf}
+\caption{Résultat cash et pertes conditionnelles. Les barres d'erreur du gain sont des intervalles normaux à 95\,\% calculés entre les 600 épisodes indépendants, avec les abstentions incluses. L'annotation « 0 ordre » distingue l'abstention de transactions gagnantes sans perte. Les impulsions et réservations sont des paramètres synthétiques.}
+\label{fig:ext-execution}
+\end{figure}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{extension_selection.pdf}
+\caption{Validation parmi huit seuils figés. Rendre le seuil plus strict réduit l'effectif accepté ; avec trop peu d'acceptations, la borne peut se dégrader. Une politique n'ayant aucune acceptation reçoit une borne triviale de 100\,\%.}
+\label{fig:ext-selection}
+\end{figure}
+
+Les CSV conservent les résultats par épisode, les seuils de calibration, les intervalles binomiaux et des traces d'ordres. Il reste impossible de déduire de ces expériences une rentabilité sur les futures cotations. L'intérêt établi est la séparation quantitative de quatre notions : gain nominal, gain de prix futur, gain cash et garantie conditionnelle après sélection.
+
+\clearpage
+\section{Passage à un réseau de devises variable}
+\label{sec:ext-scale}
+
+\subsection{Détection polynomiale et réseaux incomplets}
+
+Le calcul historique énumère les vingt cycles du réseau à quatre devises. Cette stratégie devient exponentielle lorsque le nombre de devises augmente. Le nouveau module \filepath{fxresearch/graph.py} ne fixe ni le nombre de devises ni la liste de paires. Les arêtes manquantes valent \(-\infty\) et les boucles diagonales sont absentes.
+
+Bellman--Ford fournit un témoin positif en \(O(nm)\), où \(n\) est le nombre de sommets et \(m\) celui des arêtes disponibles. Karp est appliqué séparément aux composantes fortement connexes pour calculer la moyenne maximale. Une perturbation contrôlée du seuil critique permet d'extraire un témoin proche de l'optimum ; son gain effectif est recalculé. Le fichier d'alertes distingue cette moyenne du témoin et la valeur maximale calculée. Le comparateur triangulaire est conservé, mais ne remplace pas le test global.
+
+Sur le graphe non orienté des paires disponibles, la distance au potentiel est obtenue par moindres carrés. L'incidence est creuse ; à partir des grands graphes du module, la résolution utilise LSQR plutôt qu'une inversion dense. Le rang cyclique rapporté est
+\begin{equation}
+ b_1^{\rm graphe}=m_{\rm non\ orient\acute e}-n+c,
+\end{equation}
+où \(c\) est le nombre de composantes connexes, sommets isolés compris. Ce rang n'est pas le premier nombre de Betti d'un complexe auquel on aurait ajouté des faces. Avec des paires manquantes, le programme ne suppose pas que tous les cycles bordent des triangles, ni que la composante harmonique d'un complexe rempli soit nulle.
+
+Les tests comparent les algorithmes à l'énumération exhaustive sur 72 graphes aléatoires de deux à sept sommets, y compris des arêtes manquantes, puis vérifient l'invariance de jauge et le contre-exemple à quatre devises. Cette énumération sert uniquement de référence à petite taille. Le moteur de détection ne l'appelle pas.
+
+\subsection{Profilage et stockage}
+
+\begin{figure}[H]\centering
+\includegraphics[width=\linewidth]{extension_echelle.pdf}
+\caption{Profilage de 4 à 64 devises, graphes denses et clairsemés, cinq répétitions par cas. Les graphes de ce profil ont une moyenne maximale de \(-0{,}1\) pb ; ce n'est pas un test de toutes les configurations de temps de calcul. La mémoire du panneau B est la taille théorique de la table dynamique de Karp, pas la consommation totale du processus.}
+\label{fig:ext-scale}
+\end{figure}
+
+Les performances sont mesurées sur la machine de calcul de cette version. Elles ne constituent pas une garantie de débit HFT. Une grille de 100 ms contient 864\,000 instants par journée complète ; une grille d'une seconde, 86\,400. Même un algorithme polynomial doit donc être profilé avec le taux réel de mises à jour. Le moteur réutilise ses diagnostics lorsque le graphe disponible reste identique.
+
+Les données sont importées dans une base SQLite indexée et lues dans l'ordre de réception. La mémoire de reconstruction dépend du carnet courant et du graphe, pas d'un tableau \(\mathrm{temps}\times n\times n\) de toute la période. Les sorties de diagnostic et de rejeu sont écrites au fil de l'eau. La profondeur consommée est conservée pour la version courante de chaque instrument, puis remplacée à la mise à jour.
+
+À titre de comparaison de stockage, un seul tableau dense de poids en float64 pour 64 devises et une journée à 100 ms représente environ 28,3 Go avant les autres variables. Ce tableau n'est pas créé par le nouveau moteur. Le stockage sur disque des cotations, des index et des journaux reste nécessaire et doit être dimensionné séparément.
+
+\subsection{Un test complet de traitement sur 24 heures}
+
+La commande \filepath{python demo_full_day.py} génère 12 devises, deux plateformes et une mise à jour par minute de chacune des 66 paires sur chaque plateforme. Les 190\,080 lignes couvrent 24 heures synthétiques, avec une réception 10 ms après production. La grille de diagnostic a une minute et comprend 1\,440 décisions. Les prix sont cohérents au même instant et le test ne produit aucun épisode positif.
+
+Ce test vérifie l'import, les fuseaux, les 24 sommets devise--plateforme, les comptes séparés, le changement de date et les écritures chronologiques. Le flux est clairsemé : il ne mesure pas le débit d'un carnet milliseconde sur une journée. Les tailles sont laissées inconnues volontairement ; le rejeu doit s'abstenir de prétendre simuler des remplissages sans hypothèse supplémentaire. Les données de cette démonstration ne sont pas des observations de marché.
+
+\section{Protocole préparé pour les nouvelles données}
+\label{sec:ext-future-data}
+
+\subsection{Schéma et provenance}
+
+Le format canonique décrit chaque cotation par les devises base/quote, le lieu ou fournisseur, le bid et l'ask, les heures source et réception, les tailles et l'identifiant. Les tailles sont en devise de base, y compris côté ask. Les valeurs manquantes sont conservées comme telles. La colonne volume des fichiers HistData n'est pas convertie en profondeur.
+
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}p{43mm}YY@{}}
+\toprule
+Information & Rôle & Traitement d'une absence\\
+\midrule
+Base, quote, bid, ask & Sens et prix de conversion. & Import refusé si indispensable ou invalide.\\
+Heure source et fuseau & Ordre du marché et âge. & Fuseau non deviné ; dates locales ambiguës refusées.\\
+Heure de réception & Information disponible à la décision. & Marquée inconnue ; heure source utilisée comme convention de reconstruction.\\
+Plateforme et compte & Liquidité accessible au même endroit. & Aucun transfert instantané gratuit entre lieux.\\
+Tailles bid et ask & Montants disponibles. & Pas de remplacement par une taille infinie.\\
+Fermeté et validité & Engagement de prix et possibilité de rejet. & Fermeté inconnue ; pas de certificat de remplissage.\\
+Ordres et exécutions & Résultat effectivement obtenu. & Rejeu explicitement hypothétique.\\
+\bottomrule
+\end{tabularx}
+\caption{Informations à collecter dès l'acquisition. Davantage de dates ou de devises enrichit l'étude des cotations, mais ne reconstitue pas les tailles ou exécutions absentes.}
+\end{table}
+
+L'import calcule une empreinte SHA-256 de chaque source et conserve la configuration d'interprétation. Un contenu déjà importé avec une autre convention provoque une erreur plutôt qu'une réinterprétation silencieuse. Les temps sont stockés en nanosecondes entières. Un temps d'époque numérique demande une unité explicite ; une date ISO contient de préférence son décalage UTC. La précision affichée ne prouve pas la synchronisation des horloges.
+
+Les données brutes doivent rester intactes. Les fichiers peuvent être organisés par fournisseur, paire et journée ou mois ; le stockage indexé les rassemble sans exiger de réseau complet. Si un flux fournit à la fois les deux orientations d'une même paire sur un même lieu, il faut choisir une convention instrumentale canonique. Le moteur refuse de les écraser arbitrairement dans une seule arête.
+
+\subsection{Fraîcheur et population analysée}
+
+La convention historique exclut tout instantané dès qu'une des six paires dépasse une seconde. Avec davantage de devises, ce filtre pourrait presque supprimer le réseau. Le nouveau défaut est une politique \emph{par arête} : seule la paire périmée est retirée, puis les cycles sont recherchés dans les composantes restantes. Une option \filepath{freshness_policy=all} conserve le protocole de cohorte commune.
+
+Ces deux protocoles ne produisent pas la même population. Les tableaux futurs devront rapporter, par jour, la part de grille admissible, le nombre de paires et composantes disponibles, la fréquence d'alerte et les épisodes. Il ne faudra pas attribuer à une meilleure stratégie un changement venant simplement du filtre. Les paramètres de fraîcheur, de grille et de frais sont conservés dans le manifeste du calcul.
+
+Les sommets de deux plateformes sont séparés. Leur rapprochement requiert soit un transfert avec délai et coût, soit un modèle de soldes prépositionnés. Ni la détection fournie ni son rejeu ne supposent qu'une quantité disponible sur une plateforme puisse être dépensée immédiatement sur une autre. Le rejeu actuel est limité aux routes d'une seule plateforme ; les autres sont explicitement marquées non prises en charge.
+
+Le modèle suppose des dates de valeur compatibles et des soldes immédiatement réutilisables après conversion. Une application réelle doit documenter le type d'instrument, la date de valeur, le règlement, les lignes de crédit, les marges et les possibilités de compensation. Une suite de cotations spot ne suffit pas à établir que tous les produits de conversion sont immédiatement mobilisables sur le compte.
+
+\subsection{Découpage chronologique et horizons futurs}
+
+Le générateur \filepath{split-plan} construit des fenêtres d'entraînement, calibration et test à partir des dates UTC observées. Le modèle de configuration propose 60 dates d'entraînement, 99 de calibration et 30 de test, avec avancement de 30 dates. Ces choix sont modifiables et doivent être figés avant d'examiner le test final. Une date contenant quelques ticks n'est pas déclarée automatiquement une journée complète.
+
+Les derniers instants de chaque bloc dont le résultat futur sortirait du bloc sont purgés. La borne de purge doit couvrir la route, les délais et les liquidations, et non la seule première conversion. Les mises à jour historiques peuvent servir de contexte causal, mais leurs labels ne doivent pas chevaucher le test. Les fenêtres de test qui se recouvrent sont signalées et ne sont pas comptées comme des répétitions indépendantes.
+
+L'entraînement peut apprendre des échelles, un modèle de délais et une famille de règles. La calibration produit les enveloppes ou bornes binomiales ; elle ne doit pas servir à inventer une politique non couverte par la correction. L'évaluation finale conserve les paramètres et inclut les abstentions, échecs, positions ouvertes et coûts. Un changement de fournisseur ou de convention implique un nouvel audit de données.
+
+\subsection{Chaîne logicielle préparée}
+
+\begin{table}[H]\centering\small
+\begin{tabularx}{\linewidth}{@{}p{40mm}Y@{}}
+\toprule
+Commande ou module & Résultat\\
+\midrule
+\filepath{ingest}, \filepath{inspect} & Import CSV configurable, base indexée, provenance et qualité.\\
+\filepath{detect} & Instantanés, témoins de cycles, couverture et épisodes quotidiens.\\
+\filepath{replay} & Cash, capital, capacité consommée, ordres FOK/IOC, échecs et liquidation hypothétiques.\\
+\filepath{audit-fills} & Réconciliation de journaux fournis ; pas de P\&L complet si des positions restent ouvertes.\\
+\filepath{split-plan} & Dates de chaque phase, fenêtres glissantes et règle de purge.\\
+\filepath{evaluate-policies} & Rejeu séparé de chaque politique figée sur chaque journée ; résultats par bloc.\\
+\filepath{calibrate} & Quantile de rang corrigé ; borne infinie signalée si l'effectif est insuffisant.\\
+\filepath{validate-policies} & Bornes binomiales corrigées, politique validée ou abstention, empreinte du registre.\\
+\bottomrule
+\end{tabularx}
+\caption{Le logiciel effectue uniquement des calculs hors ligne. Il ne transmet aucun ordre à un intermédiaire.}
+\end{table}
+
+Les paramètres et exemples d'appel détaillés sont dans \filepath{Guide_Nouvelles_Donnees_FX.md}. Le seuil du registre appliqué aux nouvelles alertes porte sur le rendement nominal simple total \(10^4[\exp(G_{\rm pb\,log}/10^4)-1]\), après les frais déclarés dans la détection. Les frais du rejeu doivent correspondre au même scénario pour une comparaison économique cohérente.
+
+Le rejeu historique lit le dernier prix source au moment d'arrivée de chaque ordre, suit les soldes et empêche les chevauchements sur un compte. Une taille manquante empêche l'évaluation, sauf hypothèse de taille déclarée. Un ordre FOK ne consomme rien si la taille source est insuffisante ; un IOC peut laisser un reliquat. La consommation d'une version de cotation n'est pas oubliée au signal suivant. Si la liquidation ne ferme pas les positions, le compte simulé est gelé et le résultat complet reste inconnu.
+
+Le validateur par journées utilise un label de perte par politique et bloc. Le rejeu de politiques marque aussi un inventaire non fermé comme échec conservateur, et ne l'efface pas du dénominateur. Cette cible synthétique doit être distinguée d'un gain d'exécution effectivement observé. Le code refuse les lignes dupliquées politique--bloc et exige les mêmes blocs pour les politiques comparées.
+
+\subsection{Mesures à rapporter lorsque les données arriveront}
+
+Pour chaque lieu, régime horaire, sous-période et montant, l'évaluation rapportera :
+\begin{enumerate}
+\item qualité de réception, trous de flux, horloges et paires actives ;
+\item gains nominaux et épisodes distincts, sans multiplier les ticks d'un même événement ;
+\item taux de remplissage complet, partiel et de rejet, capacité et frais effectivement payés si disponibles ;
+\item P\&L réalisé dans une devise de référence, positions restantes, perte maximale et financement ;
+\item couverture du score de bloc, erreurs par occasion, risque parmi les acceptations et abstentions ;
+\item résultats hors période, par journée et par source, avec l'unité d'incertitude statistique annoncée.
+\end{enumerate}
+La courbure et le défaut au potentiel pourront être testés comme variables explicatives ou filtres supplémentaires. Leur valeur devra être mesurée face aux marges bid--ask, aux algorithmes de graphes et aux indicateurs de liquidité ; leur seule interprétation géométrique ne prouve pas une amélioration de performance.
+
+\section{Bilan des apports et conditions d'une publication}
+\label{sec:ext-bilan}
+
+Ce complément ajoute des résultats déterministes avec preuves, une correction statistique explicite de la sélection, trois expériences reproductibles et un moteur qui accepte davantage de devises et de dates. Le support structuré réduit la perte de compensation par rapport à une boîte, y compris après un comparateur projeté plus exigeant. Les expériences statistiques montrent l'utilité des blocs et l'échec des bornes figées sous rupture. L'expérience cash distingue un gain de prix d'une opération financée et fermée ; le contrôle conditionnel peut conduire à l'abstention totale sans réservation.
+
+Ces conclusions n'impliquent pas que le marché futur permettra les profits synthétiques. Les réservations, impulsions, rejets et liquidations du simulateur sont connus par construction. Les tailles et exécutions historiques restent absentes. Les garanties de rang et binomiales supposent, respectivement, l'échangeabilité et des blocs indépendants de même loi ; davantage de dates ne les rend pas vraies automatiquement.
+
+Pour un article méthodologique, les développements constituent une base vérifiable, avec comparateurs explicites et limites identifiées. Les fonctions de support, la dualité linéaire et les principes conformes ou binomiaux ne sont pas revendiqués comme des découvertes générales. Le bénéfice propre à l'application devra être établi sur la collecte élargie, avec un protocole gelé et des labels correspondant au niveau de conclusion annoncé.
+
+Pour un article revendiquant une stratégie exploitable, la condition décisive sera l'accès à des données permettant de vérifier le prix, le montant, le remplissage et les coûts réellement accessibles au compte étudié. Un résultat négatif pourra aussi être scientifique s'il caractérise quantitativement une limite de détection ou d'exécution et apporte une comparaison reproductible qui dépasse les constats déjà établis \cite{fenn,ito,ext-liquidity}.
+
+\begin{callout}{Ce qui attend les nouvelles données}
+Le code et le protocole sont préparés pour des réseaux variables et des journées entières. Les résultats sur davantage de devises, les comparaisons entre régimes de marché et les gains exécutés ne sont pas inventés à partir des expériences synthétiques. Ils seront ajoutés après import, audit, calibration et évaluation séparée de la future collecte.
+\end{callout}
+
+\clearpage
+\renewcommand{\refname}{Références du complément}
+\begin{thebibliography}{99}
+\setcounter{enumiv}{23}
+\bibitem{ext-robust}
+A. Ben-Tal et A. Nemirovski. \emph{Robust Convex Optimization}. Mathematics of Operations Research, 23(4), 769--805, 1998.
+\href{https://doi.org/10.1287/moor.23.4.769}{DOI 10.1287/moor.23.4.769}.
+\bibitem{ext-lei}
+J. Lei, M. G'Sell, A. Rinaldo, R. J. Tibshirani et L. Wasserman.
+\emph{Distribution-Free Predictive Inference for Regression}. Journal of the American Statistical Association, 113(523), 1094--1111, 2018.
+\href{https://doi.org/10.1080/01621459.2017.1307116}{DOI 10.1080/01621459.2017.1307116}.
+\bibitem{ext-aci}
+I. Gibbs et E. J. Candès. \emph{Adaptive Conformal Inference Under Distribution Shift}. Advances in Neural Information Processing Systems, 2021.
+\href{https://proceedings.neurips.cc/paper_files/paper/2021/file/0d441de75945e5acbc865406fc9a2559-Paper.pdf}{Article original}.
+\bibitem{ext-aci-new}
+I. Gibbs et E. J. Candès. \emph{Conformal Inference for Online Prediction with Arbitrary Distribution Shifts}. Journal of Machine Learning Research, 25(162), 1--36, 2024.
+\href{https://www.jmlr.org/papers/v25/22-1218.html}{Article et matériel associé}.
+\bibitem{ext-ltt}
+A. N. Angelopoulos, S. Bates, E. J. Candès, M. I. Jordan et L. Lei.
+\emph{Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control}.
+Prépublication arXiv:2110.01052, 2021, version publiée dans The Annals of Applied Statistics en 2025.
+\href{https://arxiv.org/abs/2110.01052}{Prépublication et versions}.
+\bibitem{ext-lastlook}
+Global Foreign Exchange Committee. \emph{GFXC releases guidance paper on Last Look, publishes disclosure templates}, 18 août 2021.
+\href{https://www.globalfxc.org/press-releases/press-p210818/}{Communiqué et recommandations}.
+\bibitem{ext-liquidity}
+W. Huang, A. Ranaldo, A. Schrimpf et F. Somogyi.
+\emph{Constrained liquidity provision in currency markets}. Journal of Financial Economics, 167, 104028, 2025.
+\href{https://doi.org/10.1016/j.jfineco.2025.104028}{DOI 10.1016/j.jfineco.2025.104028}.
+\end{thebibliography}

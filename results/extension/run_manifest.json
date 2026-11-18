@@ -1,0 +1,14 @@
+{
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "pandas": "2.2.3",
+  "elapsed_seconds": 2.9334466400000565,
+  "experiments": [
+    "4",
+    "5",
+    "6",
+    "scale"
+  ],
+  "source_sha256": "10ac4277aff7a43e33ac4c00f0eb7909ff4ea3260df8c34f6e2715f8a99230b7",
+  "data_provenance": "experiments 4,5,6 are synthetic; legacy market results are not modified"
+}

@@ -1,0 +1,2 @@
+episode_id,initial_amount,status,source_currency,destination_currency,source_amount,destination_amount,fee_amount,fee_currency
+synthetic_example,100,filled,USD,EUR,100,90,0,USD

@@ -1,0 +1,29 @@
+test_hodge_and_gauge (test_empirical.EmpiricalKernelTests.test_hodge_and_gauge) ... ok
+test_sparse_karp_and_funded_dp_against_all_simple_cycles (test_empirical.EmpiricalKernelTests.test_sparse_karp_and_funded_dp_against_all_simple_cycles) ... ok
+test_aci_count_identity_arbitrary_drift (test_extension.CertificateTests.test_aci_count_identity_arbitrary_drift) ... ok
+test_capacity_requires_upper_not_lower_amount (test_extension.CertificateTests.test_capacity_requires_upper_not_lower_amount) ... ok
+test_conditional_risk_binomial_bounds (test_extension.CertificateTests.test_conditional_risk_binomial_bounds) ... ok
+test_exact_rank_guarantee_and_small_samples (test_extension.CertificateTests.test_exact_rank_guarantee_and_small_samples) ... ok
+test_flow_dual_and_unit_transformation (test_extension.CertificateTests.test_flow_dual_and_unit_transformation) ... ok
+test_support_function_attainment (test_extension.CertificateTests.test_support_function_attainment) ... ok
+test_causal_full_day_multi_currency_and_idempotence (test_extension.DataTests.test_causal_full_day_multi_currency_and_idempotence) ... ok
+test_exact_ns_timezone_and_missing_time (test_extension.DataTests.test_exact_ns_timezone_and_missing_time) ... ok
+test_fill_audit_does_not_hide_residual_inventory (test_extension.DataTests.test_fill_audit_does_not_hide_residual_inventory) ... ok
+test_historical_replay_missing_size_and_overlapping_orders (test_extension.DataTests.test_historical_replay_missing_size_and_overlapping_orders) ... ok
+test_reserved_profit_and_rejected_leg_cleanup (test_extension.ExecutionTests.test_reserved_profit_and_rejected_leg_cleanup) ... ok
+test_quad_and_sparse_hodge (test_extension.GraphTests.test_quad_and_sparse_hodge) ... ok
+test_sparse_random_against_enumeration_and_gauge (test_extension.GraphTests.test_sparse_random_against_enumeration_and_gauge) ... ok
+test_archive_price_is_not_fresh_executable_price (test_historical_replay.HistoricalReplayTests.test_archive_price_is_not_fresh_executable_price) ... ok
+test_histdata_cache_preserves_missing_depth (test_historical_replay.HistoricalReplayTests.test_histdata_cache_preserves_missing_depth) ... ok
+test_real_units_consumption_and_cash (test_historical_replay.HistoricalReplayTests.test_real_units_consumption_and_cash) ... ok
+test_unclosed_inventory_not_a_zero_profit (test_historical_replay.HistoricalReplayTests.test_unclosed_inventory_not_a_zero_profit) ... ok
+test_unknown_labels_and_rank_resolution (test_historical_replay.HistoricalReplayTests.test_unknown_labels_and_rank_resolution) ... ok
+test_frozen_family_validation_and_duplicate_rejection (test_protocol.ProtocolTests.test_frozen_family_validation_and_duplicate_rejection) ... ok
+test_observed_dates_separate_phases_and_purge (test_protocol.ProtocolTests.test_observed_dates_separate_phases_and_purge) ... ok
+test_previously_explored_blocks_do_not_enter_calibration (test_training_scale.TrainingScaleTests.test_previously_explored_blocks_do_not_enter_calibration) ... ok
+test_scales_are_unchanged_when_test_labels_change (test_training_scale.TrainingScaleTests.test_scales_are_unchanged_when_test_labels_change) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 1.551s
+
+OK

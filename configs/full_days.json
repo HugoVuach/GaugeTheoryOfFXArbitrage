@@ -1,0 +1,13 @@
+{
+  "currencies": ["USD", "EUR", "GBP", "JPY", "CHF", "AUD", "NZD", "CAD", "SEK", "NOK", "SGD", "HKD"],
+  "start_utc": "2024-01-01T00:00:00Z",
+  "end_utc": "2024-04-01T00:00:00Z",
+  "step_ms": 1000,
+  "max_age_ms": 1000,
+  "freshness_policy": "edge",
+  "fee_bp_per_conversion": 0.0,
+  "positive_tolerance_bp": 1e-8,
+  "optimize_mean_on_alert": true,
+  "compute_triangles": true,
+  "max_decisions": null
+}

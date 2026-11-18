@@ -1,46 +1,67 @@
-# Jauge, holonomie et arbitrage — trois expériences
+# Arbitrage FX : huit devises et journées entières
 
-Le rapport développe les connexions sur les fibrés en droites, les périodes de de Rham et la décomposition de Hodge sur le réseau des devises. Il comprend une partie complète pour chacune des trois expériences supplémentaires.
+Le rapport conserve ses 50 pages précédentes et ajoute la campagne empirique sur huit devises : USD, EUR, GBP, JPY, CHF, AUD, CAD et NZD, avec les 28 paires directes.
 
-## Expériences et données
+## Données et limites de couverture
 
-1. experiences.py construit un cylindre à huit sommets, douze arêtes et quatre faces. Il teste 19 481 scénarios de période et de spread et vérifie le seuil analytique.
-2. Le même script compare trois enveloppes temporelles sur six paires HistData entre EUR, GBP, USD et JPY. Les cinq fenêtres du 10 au 14 juin 2024 calibrent les rayons. Les cinq fenêtres du 8 au 12 juillet évaluent les règles. La grille va de 12 h 20 à 13 h 00 UTC à pas de 100 ms. Les trois quantiles testés sont 90 %, 95 % et 99 %.
-3. Il simule quarante trajectoires indépendantes d'un marché martingale, quinze scénarios d'observation et quatre délais d'exécution. Les paramètres d'actualisation sont des intensités nominales. Sur la grille, l'attente moyenne effective est indiquée dans le rapport.
+- **HistData** : archives Generic ASCII Tick de tous les mois de 2024, avec décembre 2023 comme contexte UTC. Ce sont les prix bid/ask bruts de la campagne annuelle. Les tailles de carnet sont inconnues.
+- **Dukascopy** : paquets journaliers bruts effectivement reçus en janvier–mars 2024, avec meilleurs bid/ask et volumes. Le téléchargement annuel prévu a été arrêté sur HTTP 429. Seules les dates dont les 28 paquets sont reçus entrent dans les calculs de quantité ; la liste et les échecs figurent dans le journal de sources.
+- La comparaison des sources est effectuée sans les supposer indépendantes. Les boucles ne mélangent pas les fournisseurs et les trous ne sont pas interpolés.
+- Tous les remplissages sont des contrefactuels annoncés. Aucun journal d’exécutions réelles n’est créé à partir de prix seuls.
 
-Le dossier results contient les résultats numériques des expériences, les validations et les résultats historiques de la version précédente. Le fichier data/exp2_cycle_panels.npz conserve les gains moyens nominaux et rejoués des vingt cycles, les masques de fraîcheur et les erreurs maximales des douze directions. Il permet de recalculer l'expérience 2 sans télécharger les cotations. Ce fichier est un cache d'observables dérivées.
+Les archives brutes sont fournies séparément du code pour éviter de dupliquer plusieurs gigaoctets dans le ZIP du projet. Leur index contient les empreintes et les liens. Le code conserve les résultats et observables nécessaires à l’inspection du rapport.
 
-Les fichiers source/note.tex et source/experiences.tex contiennent le texte éditable. Le script experience_report.py produit les figures, tableaux et valeurs des trois expériences. Le script make_report.py assemble un LaTeX autonome avec les figures vectorielles et les tableaux intégrés.
+L’index de téléchargement `Donnees_Brutes_FX_8_Devises_2024.md` est inclus dans ce ZIP. Les gros caches dérivés de ticks et de grilles sont omis ; les commandes ci-dessous les reconstruisent. Les tableaux et les six nouvelles figures se régénèrent directement depuis les résultats et les petits échantillons de tracé fournis, sans téléchargement.
 
-## Reproduire les trois expériences
+## Installation et reproduction hors ligne
 
-Environnement testé avec Python 3.12 et les versions de requirements.txt. Une distribution TeX complète avec pdfLaTeX, Latin Modern, babel, TikZ, tcolorbox et latexmk sert aux figures PGF et à la compilation.
+Python 3.12 ; dépendances figées dans `requirements.txt`. Une distribution TeX complète avec pdfLaTeX, Latin Modern, babel, PGF/TikZ et tcolorbox est nécessaire pour les figures et le PDF.
 
-~~~bash
+```bash
 python -m pip install -r requirements.txt
-python experiences.py
-python make_report.py
-latexmk -pdf -interaction=nonstopmode -halt-on-error Note_Jauge_Arbitrage_FX_3_Experiences.tex
-~~~
+python restore_raw.py --archives /chemin/vers/les_archives --output raw
+python collect_histdata_year.py --offline --workers 3
+python study_dukascopy.py features --source histdata --raw data/histdata_months --result results/histdata_year
+python study_dukascopy.py features --source dukascopy --raw raw/dukascopy --result results/dukascopy
+python study_dukascopy.py augment
+python study_dukascopy.py replay
+python study_dukascopy.py calibrate
+python empirical_flow_check.py
+python compare_sources.py
+python analyse_long_period.py
+python report_long_period.py
+python make_long_period_report.py
+pdflatex -interaction=nonstopmode -halt-on-error Note_Jauge_Arbitrage_FX_3_Experiences.tex
+pdflatex -interaction=nonstopmode -halt-on-error Note_Jauge_Arbitrage_FX_3_Experiences.tex
+python -m unittest discover -s tests -v
+```
 
-Les graines, paramètres et quantiles du protocole sont fixés dans le code. Les textes chiffrés du rapport décrivent ce protocole par défaut. Les tableaux et figures sont reconstruits depuis les résultats produits.
+La restauration vérifie chaque fichier original avec son SHA-256. Les caches mensuels sont reconstruits depuis les ZIP. Les journaux de sources livrés fixent les dates Dukascopy du corpus. Les commandes d’analyse reprennent les jours déjà entièrement calculés ; déplacer `results/histdata_year/days` et `results/dukascopy/days` pour refaire tous les calculs depuis les originaux, en gardant les journaux de sources.
 
-Le fichier Note_Jauge_Arbitrage_FX_3_Experiences.tex se compile également seul dans un dossier vide. Avec pdfLaTeX, lancer deux compilations successives pour résoudre les renvois.
+## Protocole et cibles
 
-## Reconstruire le cache depuis les données de marché
+`configs/histdata_2024_frozen.json` fixe janvier–mars pour l’apprentissage, avril–septembre pour la calibration et octobre–décembre pour le test annuel. `configs/dukascopy_aux_frozen.json` décrit le sous-protocole de quantité. L’ancien projet annuel Dukascopy est conservé pour documenter le changement imposé par l’accès, sans prétendre avoir reçu les mois manquants.
 
-Les douze archives Generic ASCII Tick Data de juin et juillet 2024 représentent environ 168 Mo. Les pages du fournisseur et les empreintes exactes sont conservées dans results/sources_sha256.csv. Le fournisseur utilise l'EST fixe, UTC−5, que le code convertit en UTC.
+La grille est de 100 ms, avec le dernier prix source connu à chaque date. La fraîcheur principale est d’une seconde par paire, et les dix dernières secondes de chaque bloc sont purgées pour les labels futurs. Les duplications de temps sont conservées dans les originaux ; la reconstruction utilise le dernier enregistrement à l’heure considérée. Les temps de réception locaux, la fermeté et la file d’attente ne sont pas disponibles.
 
-~~~bash
-python experiences.py --download --refresh-data
-~~~
+Les enveloppes sur le **dernier prix archivé** et celles exigeant un **prix futur frais** sont séparées. Un label inconnu devient un score majorant infini ; il n’est pas supprimé après la sélection. Les échelles normalisées sont apprises sur l’entraînement seulement. Les comptes statistiques sont des journées du lundi au vendredi, pas des millions de ticks indépendants.
 
-Les fichiers sont téléchargés dans raw/. Si le formulaire du fournisseur change, ouvrir les URL du manifeste et y placer les ZIP sous les noms de la colonne archive. Le script vérifie chaque empreinte avant de reconstruire le cache. L'option --raw CHEMIN permet de choisir un autre dossier.
+Le rejeu suit les soldes, volumes consommés, frais et routes. Les mêmes prix/tailles répétés ne reconstituent pas la profondeur. Un inventaire non fermé gèle le compte et garde un P&L complet inconnu. La validation parmi huit seuils vise l’existence d’une perte ou d’un inventaire non fermé pendant une journée traitée : ce critère diffère du signe du P&L quotidien et du taux de pertes par trade.
 
-Pour recalculer aussi les résultats historiques antérieurs aux trois expériences, exécuter python analyse.py, puis python make_report.py. La commande python gauge.py lance les vérifications mathématiques de base. Les expériences ajoutent les contrôles sur le cylindre, les bornes de cycle et les changements de jauge dépendant du temps.
+Les traces enregistrent aussi la devise et le montant résiduels ainsi que les USD déjà récupérés. Le plancher comptable décote à zéro les positions longues restantes et conserve ces recettes partielles ; il n’impute pas un P&L nul aux positions ouvertes. Les variantes supplémentaires du filtre de 100 ms sont un suivi exploratoire documenté dans `configs/robustness_followup.json`, après le premier résumé de test. Les sommes du test portent sur onze comptes journaliers initialisés séparément.
 
-## Lecture des unités et des résultats
+## Fichiers de référence
 
-Les petits gains sont en points de base logarithmiques. La référence temporelle est un capital détenu dans la devise de départ avec portage nul dans les unités de cotation. L'expérience 2 mesure des gains aux cotations archivées, avec un filtre de fraîcheur pour le rejeu. L'expérience 3 exécute aux prix synchrones du modèle aux instants de conversion. Ses fréquences dépendent des paramètres synthétiques déclarés.
+- `source/previous_50_pages.tex` : rapport précédent autonome conservé.
+- `source/long_period.tex` : texte de la campagne empirique.
+- `collect_histdata_year.py`, `collect_dukascopy.py` : acquisition traçable ; l’option réseau Dukascopy s’arrête en cas de limitation.
+- `study_dukascopy.py`, `fxresearch/empirical.py`, `fxresearch/historical_replay.py` : reconstruction, diagnostics, labels et cash.
+- `analyse_long_period.py`, `report_long_period.py` : résumés, comparaisons, tables et figures.
+- `results/histdata_year/`, `results/dukascopy/`, `results/source_comparison/` : résultats, sources, audits et traces hypothétiques.
+- `README_Legacy.md` : expériences initiales ; les expériences synthétiques restent explicitement séparées des archives réelles.
 
-Les couvertures de l'expérience 2 sont descriptives, avec une calibration sur juin et un test sur juillet. Les intervalles de l'expérience 3 utilisent les quarante trajectoires indépendantes comme unités de répétition.
+Le LaTeX final intègre les tableaux et les figures vectorielles et peut se compiler seul. Les propriétés de géométrie, de dualité et de calibration n’impliquent pas une rentabilité ni une priorité scientifique générale.
+
+Le PDF livré compte 63 pages : les 50 pages antérieures sont conservées, puis la campagne commence page 51. Les expériences réelles I, II et III commencent respectivement pages 54, 56 et 59. `python audit_empirical_results.py` recoupe les totaux et les journaux de cash publiés ; les 24 tests unitaires portent notamment sur les unités, les capacités, les labels manquants et la séparation entraînement/test.
+
+L’amendement `configs/histdata_2024_calibration_amendment.json` retire de la calibration les dix dates de juin et juillet déjà explorées dans le rapport précédent. Elles restent dans les originaux et les statistiques descriptives. Le test octobre–décembre est conservé.

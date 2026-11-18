@@ -1,0 +1,94 @@
+{
+  "seed": 131601,
+  "currencies": 6,
+  "routes": 25,
+  "max_cycle_length": 3,
+  "funding_currency": "USD",
+  "initial_notional_usd": 100000,
+  "calibration_episodes": 199,
+  "test_episodes": 600,
+  "alpha": 0.05,
+  "thresholds_bp": {
+    "reserved": {
+      "price": 1.8802983992813824,
+      "execution": 2.0722886075269624
+    },
+    "unreserved": {
+      "price": 7.333568492416225,
+      "execution": 7.4393226875007645
+    }
+  },
+  "conditional_policies": {
+    "reserved": {
+      "threshold_bp": 4.0,
+      "risk_upper": 0.03662973944633264,
+      "decision": "validated"
+    },
+    "unreserved": {
+      "threshold_bp": null,
+      "risk_upper": null,
+      "decision": "abstain_no_validated_policy"
+    }
+  },
+  "conditional_risk_alpha": 0.05,
+  "calibration_confidence_delta": 0.05,
+  "frozen_policy_thresholds_bp": [
+    0.0,
+    0.5,
+    1.0,
+    2.0,
+    3.0,
+    4.0,
+    6.0,
+    8.0
+  ],
+  "configurations": {
+    "reserved": {
+      "initial_amount": 100000.0,
+      "fee_bp": 0.02,
+      "latency_ms": 50,
+      "latency_jitter_ms": 30,
+      "cleanup_latency_ms": 50,
+      "rejection_probability": 0.015,
+      "partial_probability": 0.04,
+      "validity_threshold_bp": 0.35,
+      "validity_reject_probability": 0.25,
+      "depth_stress_probability": 0.04,
+      "mode": "reserved"
+    },
+    "unreserved": {
+      "initial_amount": 100000.0,
+      "fee_bp": 0.02,
+      "latency_ms": 50,
+      "latency_jitter_ms": 30,
+      "cleanup_latency_ms": 50,
+      "rejection_probability": 0.015,
+      "partial_probability": 0.04,
+      "validity_threshold_bp": 0.35,
+      "validity_reject_probability": 0.25,
+      "depth_stress_probability": 0.04,
+      "mode": "unreserved"
+    }
+  },
+  "scenarios": {
+    "null": {
+      "amplitude_bp": 0
+    },
+    "short_pulse": {
+      "amplitude_bp": 6,
+      "duration_after_decision_ms": 40
+    },
+    "persistent_pulse": {
+      "amplitude_bp": 6,
+      "duration_after_decision_ms": 2000
+    }
+  },
+  "assumptions": [
+    "independent episodes; one attempt at most in each episode",
+    "common random numbers for the same potential route across methods",
+    "cleanup liquidity is replenished at the last depth level",
+    "exogenous prices; no endogenous response of other traders",
+    "reserved mode assumes a full-route commitment, not merely IOC/FOK on each leg"
+  ],
+  "not_claimed": "real-market profits or a validated model of a named venue"
+}

@@ -1,0 +1,16 @@
+{
+  "seed": 131401,
+  "cases": 2000,
+  "shocks_per_case": 128,
+  "factor_accepts": 1240,
+  "box_accepts": 0,
+  "projected_box_accepts": 1099,
+  "capacity_rejections": 280,
+  "median_width_ratio": 20.465633343873197,
+  "median_projected_ratio": 1.4620913982957888,
+  "maximum_bound_violation_bp": 0.0,
+  "gauge_error_bp": 1.1371459329723166e-13,
+  "maximum_duality_gap_usd": 1.4551915228366852e-11,
+  "maximum_flow_unit_error_usd": 3.806643888992767e-11,
+  "status": "controlled known uncertainty set; no learned market guarantee"
+}

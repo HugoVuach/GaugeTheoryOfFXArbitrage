@@ -1,0 +1,33 @@
+{
+  "date": "2024-02-11",
+  "phase": "calibration",
+  "source": "dukascopy",
+  "status": "processed",
+  "raw_ticks": 108456,
+  "candidate_frames": 0,
+  "candidate_episodes": 0,
+  "scores": {
+    "50": {
+      "cycle_mean_error": 0.0,
+      "edge_error": 0.0,
+      "label_missing": 0,
+      "archived_cycle_mean_error": 0.0,
+      "archived_edge_error": 0.0
+    },
+    "100": {
+      "cycle_mean_error": 0.0,
+      "edge_error": 0.0,
+      "label_missing": 0,
+      "archived_cycle_mean_error": 0.0,
+      "archived_edge_error": 0.0
+    },
+    "500": {
+      "cycle_mean_error": 0.0,
+      "edge_error": 0.0,
+      "label_missing": 0,
+      "archived_cycle_mean_error": 0.0,
+      "archived_edge_error": 0.0
+    }
+  },
+  "seconds": 0.990671773000031
+}

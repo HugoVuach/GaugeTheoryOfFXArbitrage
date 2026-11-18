@@ -1,0 +1,33 @@
+{
+  "date": "2024-12-30",
+  "phase": "test",
+  "source": "histdata",
+  "status": "processed",
+  "raw_ticks": 2558363,
+  "candidate_frames": 434988,
+  "candidate_episodes": 81611,
+  "scores": {
+    "50": {
+      "cycle_mean_error": Infinity,
+      "edge_error": Infinity,
+      "label_missing": 59901,
+      "archived_cycle_mean_error": 0.5664007381162719,
+      "archived_edge_error": 2.0976554010495665
+    },
+    "100": {
+      "cycle_mean_error": Infinity,
+      "edge_error": Infinity,
+      "label_missing": 105377,
+      "archived_cycle_mean_error": 0.6648398559070756,
+      "archived_edge_error": 2.531747552262556
+    },
+    "500": {
+      "cycle_mean_error": Infinity,
+      "edge_error": Infinity,
+      "label_missing": 273769,
+      "archived_cycle_mean_error": 0.6919747648291074,
+      "archived_edge_error": 3.053303208085455
+    }
+  },
+  "seconds": 8.201611160000539
+}

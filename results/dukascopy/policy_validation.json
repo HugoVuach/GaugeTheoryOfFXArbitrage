@@ -1,0 +1,72 @@
+{
+  "policies": [
+    {
+      "method": "threshold_0",
+      "traded_calibration_days": 21,
+      "losing_or_unknown_days": 21,
+      "risk_upper": 1.0,
+      "validated": false,
+      "calibration_pnl": -1404537.3076820571
+    },
+    {
+      "method": "threshold_0.1",
+      "traded_calibration_days": 21,
+      "losing_or_unknown_days": 21,
+      "risk_upper": 1.0,
+      "validated": false,
+      "calibration_pnl": -1403225.9766754652
+    },
+    {
+      "method": "threshold_0.25",
+      "traded_calibration_days": 20,
+      "losing_or_unknown_days": 20,
+      "risk_upper": 1.0,
+      "validated": false,
+      "calibration_pnl": -1102915.6597213938
+    },
+    {
+      "method": "threshold_0.5",
+      "traded_calibration_days": 19,
+      "losing_or_unknown_days": 18,
+      "risk_upper": 0.9996700748049966,
+      "validated": false,
+      "calibration_pnl": -602022.585227919
+    },
+    {
+      "method": "threshold_1",
+      "traded_calibration_days": 17,
+      "losing_or_unknown_days": 16,
+      "risk_upper": 0.9996312672331372,
+      "validated": false,
+      "calibration_pnl": -600096.3315194973
+    },
+    {
+      "method": "threshold_2",
+      "traded_calibration_days": 16,
+      "losing_or_unknown_days": 15,
+      "risk_upper": 0.9996082259501534,
+      "validated": false,
+      "calibration_pnl": -500675.8332586372
+    },
+    {
+      "method": "threshold_4",
+      "traded_calibration_days": 12,
+      "losing_or_unknown_days": 12,
+      "risk_upper": 1.0,
+      "validated": false,
+      "calibration_pnl": -297710.7663137596
+    },
+    {
+      "method": "threshold_8",
+      "traded_calibration_days": 7,
+      "losing_or_unknown_days": 7,
+      "risk_upper": 1.0,
+      "validated": false,
+      "calibration_pnl": 112.48335176090768
+    }
+  ],
+  "selected_policy": null,
+  "family_size": 8,
+  "assumptions": "exchangeability and iid market days are hypotheses, not verified facts",
+  "target": "at least one strictly negative cash PnL OR unresolved inventory in a traded UTC day"
+}

@@ -1,0 +1,10 @@
+{
+  "delimiter": ",",
+  "fieldnames": ["timestamp", "bid", "ask", "volume"],
+  "timestamp_format": "%Y%m%d %H%M%S%f",
+  "source_timezone": "EST_FIXED",
+  "venue": "HISTDATA_ARCHIVE",
+  "base": "EUR",
+  "quote": "USD",
+  "columns": {"market_ts": "timestamp", "bid": "bid", "ask": "ask"}
+}

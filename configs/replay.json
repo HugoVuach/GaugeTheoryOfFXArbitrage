@@ -1,0 +1,12 @@
+{
+  "funding_currency": "USD",
+  "notional": 100000,
+  "capital_per_venue": 1000000,
+  "latency_ms_per_leg": 100,
+  "cleanup_latency_ms": 100,
+  "execution_max_age_ms": 1000,
+  "fee_bp_per_conversion": 0.02,
+  "funding_rate_per_year": 0.0,
+  "order_type": "FOK",
+  "assumed_size_base": null
+}
